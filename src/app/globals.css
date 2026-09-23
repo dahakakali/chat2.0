@@ -220,7 +220,7 @@ img { display: block; max-width: 100%; }
   .chat-header__hint { display: none; }
   .messages-container { padding: 16px; }
   .message-input { padding: 8px 16px 12px; }
-  .message__bubble { max-width: 90%; }
+  .message__bubble { max-width: 100%; }
   .admin-page { padding: 16px; }
   .admin-header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
