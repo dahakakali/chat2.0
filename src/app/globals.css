@@ -122,7 +122,7 @@ img { display: block; max-width: 100%; }
 .message__name--ai { background: var(--accent-ai-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .message__time { font-size: 11px; color: var(--text-muted); }
 .message__body { display: flex; }
-.message__bubble { max-width: 75%; padding: 8px 14px; border-radius: var(--radius-md); background: var(--bg-glass); border: 1px solid var(--border-color); transition: background var(--transition); }
+.message__bubble { max-width: 100%; padding: 8px 14px; border-radius: var(--radius-md); background: var(--bg-glass); border: 1px solid var(--border-color); transition: background var(--transition); }
 .message__bubble:hover { background: var(--bg-glass-hover); }
 .message__bubble--ai { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.15); box-shadow: 0 0 16px var(--accent-ai-glow); }
 .message__bubble--ai:hover { background: rgba(16, 185, 129, 0.12); }
