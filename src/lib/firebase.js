@@ -31,9 +31,30 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app =
-  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
+// --- Diagnostic: log whether Firebase config env vars are set (not their values) ---
+if (typeof window !== "undefined") {
+  console.log("[Firebase Init] Config check:", {
+    apiKey: !!firebaseConfig.apiKey,
+    authDomain: !!firebaseConfig.authDomain,
+    projectId: !!firebaseConfig.projectId,
+    storageBucket: !!firebaseConfig.storageBucket,
+    messagingSenderId: !!firebaseConfig.messagingSenderId,
+    appId: !!firebaseConfig.appId,
+  });
+}
+
+let app;
+let db;
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  db = getFirestore(app);
+  if (typeof window !== "undefined") {
+    console.log("[Firebase Init] ✅ Firebase app and Firestore initialized successfully");
+  }
+} catch (initError) {
+  console.error("[Firebase Init] ❌ Failed to initialize Firebase:", initError);
+  throw initError;
+}
 
 let storage;
 try {
@@ -45,31 +66,48 @@ try {
 // ===================== USER FUNCTIONS =====================
 
 export async function registerUser(name, email, pin) {
-  const userRef = doc(db, "users", email);
-  const existing = await getDoc(userRef);
-  if (existing.exists()) {
-    throw new Error("An account with this email already exists. Please login instead.");
+  console.log("[registerUser] Attempting registration for:", email);
+  try {
+    const userRef = doc(db, "users", email);
+    const existing = await getDoc(userRef);
+    console.log("[registerUser] Existing user check, exists:", existing.exists());
+    if (existing.exists()) {
+      throw new Error("An account with this email already exists. Please login instead.");
+    }
+    await setDoc(userRef, {
+      name,
+      email,
+      pin,
+      createdAt: serverTimestamp(),
+    });
+    console.log("[registerUser] ✅ Registration successful for:", email);
+    return { name, email };
+  } catch (err) {
+    console.error("[registerUser] ❌ Registration error:", err.code || err.message || err);
+    throw err;
   }
-  await setDoc(userRef, {
-    name,
-    email,
-    pin,
-    createdAt: serverTimestamp(),
-  });
-  return { name, email };
 }
 
 export async function loginUser(email, pin) {
-  const userRef = doc(db, "users", email);
-  const userDoc = await getDoc(userRef);
-  if (!userDoc.exists()) {
-    throw new Error("No account found with this email.");
+  console.log("[loginUser] Attempting login for:", email);
+  try {
+    const userRef = doc(db, "users", email);
+    console.log("[loginUser] Firestore doc ref created, fetching...");
+    const userDoc = await getDoc(userRef);
+    console.log("[loginUser] Firestore response received, exists:", userDoc.exists());
+    if (!userDoc.exists()) {
+      throw new Error("No account found with this email.");
+    }
+    const userData = userDoc.data();
+    if (userData.pin !== pin) {
+      throw new Error("Incorrect PIN. Please try again.");
+    }
+    console.log("[loginUser] ✅ Login successful for:", email);
+    return { name: userData.name, email: userData.email };
+  } catch (err) {
+    console.error("[loginUser] ❌ Login error:", err.code || err.message || err);
+    throw err;
   }
-  const userData = userDoc.data();
-  if (userData.pin !== pin) {
-    throw new Error("Incorrect PIN. Please try again.");
-  }
-  return { name: userData.name, email: userData.email };
 }
 
 export async function verifyPin(email, pin) {

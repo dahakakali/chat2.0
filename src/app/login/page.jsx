@@ -31,9 +31,10 @@ export default function LoginPage() {
   };
 
   const handleInputFocus = (e) => {
+    const el = e.currentTarget;
     requestAnimationFrame(() => {
       setTimeout(() => {
-        e.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }, 150);
     });
   };
