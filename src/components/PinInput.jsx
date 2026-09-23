@@ -10,7 +10,7 @@ export default function PinInput({ value = "", onChange }) {
     const el = e.target;
     requestAnimationFrame(() => {
       setTimeout(() => {
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch {}
       }, 150);
     });
   };

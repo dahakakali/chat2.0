@@ -34,7 +34,7 @@ export default function LoginPage() {
     const el = e.currentTarget;
     requestAnimationFrame(() => {
       setTimeout(() => {
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch {}
       }, 150);
     });
   };
