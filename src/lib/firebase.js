@@ -186,17 +186,25 @@ export function subscribeToMessages(roomId, callback, messageLimit = 500) {
 
 export async function uploadFile(roomId, file) {
   if (!storage) throw new Error("Firebase Storage is not configured.");
-  const filename = `${Date.now()}_${file.name}`;
+  const filename = `${Date.now()}_${file.name || "upload"}`;
   const storageRef = ref(storage, `rooms/${roomId}/files/${filename}`);
-  await uploadBytes(storageRef, file);
+  
+  // Explicitly set metadata to ensure audio/video/images have correct MIME types
+  // This is required for proper playback and rendering on mobile devices and WebViews
+  const metadata = {
+    contentType: file.type || "application/octet-stream"
+  };
+  
+  await uploadBytes(storageRef, file, metadata);
   const url = await getDownloadURL(storageRef);
   return url;
 }
 
 export function getFileType(file) {
-  if (file.type.startsWith("image/")) return "image";
-  if (file.type.startsWith("audio/")) return "audio";
-  if (file.type.startsWith("video/")) return "video";
+  const type = file.type || "";
+  if (type.startsWith("image/")) return "image";
+  if (type.startsWith("audio/")) return "audio";
+  if (type.startsWith("video/")) return "video";
   return "file";
 }
 

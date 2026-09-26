@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base app theme — dark, no action bar -->
+    <style name="Theme.Chat20" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/bg_primary</item>
+        <item name="android:statusBarColor">@color/bg_primary</item>
+        <item name="android:navigationBarColor">@color/bg_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/accent_primary</item>
+        <item name="colorPrimaryDark">@color/bg_primary</item>
+        <item name="colorAccent">@color/accent_secondary</item>
+    </style>
+
+    <!-- Splash theme — shown during cold start -->
+    <style name="Theme.Chat20.Splash" parent="Theme.Chat20">
+        <item name="android:windowBackground">@drawable/splash_bg</item>
+    </style>
+</resources>

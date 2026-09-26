@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/drawable_splash_bg.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/drawable/splash_bg.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/drawable_progress_bar.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/drawable/progress_bar.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/layout_activity_main.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.dahakakali.chat20.app-debug-23:/drawable_btn_primary.xml.flat",
+        "source": "com.dahakakali.chat20.app-main-25:/drawable/btn_primary.xml"
+    }
+]
