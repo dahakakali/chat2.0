@@ -185,19 +185,22 @@ export function subscribeToMessages(roomId, callback, messageLimit = 500) {
 // ===================== FILE UPLOAD =====================
 
 export async function uploadFile(roomId, file) {
-  if (!storage) throw new Error("Firebase Storage is not configured.");
-  const filename = `${Date.now()}_${file.name || "upload"}`;
-  const storageRef = ref(storage, `rooms/${roomId}/files/${filename}`);
-  
-  // Explicitly set metadata to ensure audio/video/images have correct MIME types
-  // This is required for proper playback and rendering on mobile devices and WebViews
-  const metadata = {
-    contentType: file.type || "application/octet-stream"
-  };
-  
-  await uploadBytes(storageRef, file, metadata);
-  const url = await getDownloadURL(storageRef);
-  return url;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('roomId', roomId);
+
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || 'Failed to upload file to Vercel Blob');
+  }
+
+  const data = await res.json();
+  return data.url;
 }
 
 export function getFileType(file) {
