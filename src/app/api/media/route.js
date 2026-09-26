@@ -3,22 +3,24 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
-    const url = new URL(request.url).searchParams.get('url');
+    const pathname = new URL(request.url).searchParams.get('pathname');
 
-    if (!url) {
-      return new NextResponse('Missing url parameter', { status: 400 });
+    if (!pathname) {
+      return new NextResponse('Missing pathname parameter', {
+        status: 400,
+      });
     }
-
-    // Extract the blob pathname from the URL
-    const blobUrl = new URL(url);
-    const pathname = blobUrl.pathname.replace(/^\/+/, '');
 
     const result = await get(pathname, {
       access: 'private',
     });
 
-    if (!result) {
-      return new NextResponse('Blob not found', { status: 404 });
+    if (!result || result.statusCode !== 200) {
+      console.error('Blob not found:', pathname);
+
+      return new NextResponse('Blob not found', {
+        status: 404,
+      });
     }
 
     return new NextResponse(result.stream, {
@@ -26,7 +28,8 @@ export async function GET(request) {
       headers: {
         'Content-Type':
           result.blob.contentType || 'application/octet-stream',
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'private, no-cache',
       },
     });
   } catch (error) {

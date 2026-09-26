@@ -8,20 +8,33 @@ export async function POST(request) {
     const roomId = form.get('roomId') || 'general';
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'No file provided' },
+        { status: 400 }
+      );
     }
 
     const rawFilename = file.name || 'upload';
     const filename = `rooms/${roomId}/${Date.now()}_${rawFilename}`;
-    
-    const blob = await put(filename, file, { access: 'private' });
-    
-    // Instead of passing back the raw private URL, we wrap it in our proxy API URL
-    const proxyUrl = `/api/media?url=${encodeURIComponent(blob.url)}`;
-    
+
+    const blob = await put(filename, file, {
+      access: 'private',
+    });
+
+    // Extract the Blob pathname
+    const pathname = new URL(blob.url).pathname.replace(/^\/+/, '');
+
+    // Send only the pathname to the media API
+    const proxyUrl =
+      `/api/media?pathname=${encodeURIComponent(pathname)}`;
+
     return NextResponse.json({ url: proxyUrl });
   } catch (error) {
-    console.error("Vercel Blob Upload Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Vercel Blob Upload Error:', error);
+
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 }
