@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-30:12
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:2:1-32:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/mridul/.gradle/caches/transforms-4/9f7e3cc5831df4cbfd29ee7ed7b865d7/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.appcompat:appcompat:1.6.1] /home/mridul/.gradle/caches/transforms-4/b27725821584d208d50eda84996d4896/transformed/appcompat-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.webkit:webkit:1.10.0] /home/mridul/.gradle/caches/transforms-4/9ec96b7b1d57cfb428acb1b7ad64aab9/transformed/webkit-1.10.0/AndroidManifest.xml:2:1-7:12
@@ -55,9 +55,17 @@ uses-permission#android.permission.POST_NOTIFICATIONS
 ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:6:5-77
 	android:name
 		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:6:22-74
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:7:5-79
+	android:name
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:7:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:5-81
+	android:name
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:22-78
 application
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:5-29:19
-INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:5-29:19
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:10:5-31:19
+INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:10:5-31:19
 MERGED from [androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:28:5-89
@@ -73,41 +81,41 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/mridul/.gradle/caches
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:12:9-35
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:14:9-35
 	android:label
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:11:9-41
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:13:9-41
 	android:hardwareAccelerated
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:15:9-43
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:17:9-43
 	android:icon
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:10:9-43
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:12:9-43
 	android:allowBackup
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:9:9-35
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:11:9-35
 	android:theme
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:13:9-44
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:15:9-44
 	android:usesCleartextTraffic
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:14:9-44
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:16:9-44
 activity#com.dahakakali.chat20.MainActivity
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:17:9-28:20
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:19:9-30:20
 	android:windowSoftInputMode
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:21:13-55
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:23:13-55
 	android:exported
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:19:13-36
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:21:13-36
 	android:configChanges
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:20:13-115
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:22:13-115
 	android:theme
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:22:13-55
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:24:13-55
 	android:name
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:18:13-41
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:20:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:24:13-27:29
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:13-29:29
 action#android.intent.action.MAIN
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:25:17-69
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:27:17-69
 	android:name
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:25:25-66
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:27:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:17-77
+ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:28:17-77
 	android:name
-		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:27-74
+		ADDED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:28:27-74
 uses-sdk
 INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml

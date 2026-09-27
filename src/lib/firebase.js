@@ -250,4 +250,13 @@ export const ROOMS = [
   { id: "music", name: "Music", icon: "🎵", description: "Music lovers" },
 ];
 
+export async function updateUserLocation(email, lat, lng) {
+  try {
+    const userRef = doc(db, "users", email);
+    await setDoc(userRef, { location: { lat, lng } }, { merge: true });
+  } catch (err) {
+    console.error("Failed to update user location", err);
+  }
+}
+
 export { db, storage };

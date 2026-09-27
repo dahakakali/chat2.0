@@ -17,83 +17,89 @@
 13    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 13-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:6:5-77
 13-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:6:22-74
-14
-15    <permission
-15-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
-16        android:name="com.dahakakali.chat20.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-16-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
-17        android:protectionLevel="signature" />
-17-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
-18
-19    <uses-permission android:name="com.dahakakali.chat20.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-19-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
-19-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:7:5-79
+14-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:7:22-76
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:5-81
+15-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:22-78
+16
+17    <permission
+17-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+18        android:name="com.dahakakali.chat20.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+18-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+19        android:protectionLevel="signature" />
+19-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
 20
-21    <application
-21-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:8:5-29:19
-22        android:allowBackup="true"
-22-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:9:9-35
-23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-23-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
-24        android:debuggable="true"
-25        android:extractNativeLibs="false"
-26        android:hardwareAccelerated="true"
-26-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:15:9-43
-27        android:icon="@mipmap/ic_launcher"
-27-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:10:9-43
-28        android:label="@string/app_name"
-28-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:11:9-41
-29        android:supportsRtl="true"
-29-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:12:9-35
-30        android:theme="@style/Theme.Chat20"
-30-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:13:9-44
-31        android:usesCleartextTraffic="true" >
-31-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:14:9-44
-32        <activity
-32-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:17:9-28:20
-33            android:name="com.dahakakali.chat20.MainActivity"
-33-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:18:13-41
-34            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|screenLayout|smallestScreenSize"
-34-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:20:13-115
-35            android:exported="true"
-35-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:19:13-36
-36            android:theme="@style/Theme.Chat20.Splash"
-36-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:22:13-55
-37            android:windowSoftInputMode="adjustResize" >
-37-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:21:13-55
-38            <intent-filter>
-38-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:24:13-27:29
-39                <action android:name="android.intent.action.MAIN" />
-39-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:25:17-69
-39-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:25:25-66
-40
-41                <category android:name="android.intent.category.LAUNCHER" />
-41-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:17-77
-41-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:27-74
-42            </intent-filter>
-43        </activity>
-44
-45        <provider
-45-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
-46            android:name="androidx.startup.InitializationProvider"
-46-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
-47            android:authorities="com.dahakakali.chat20.androidx-startup"
-47-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
-48            android:exported="false" >
-48-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
-49            <meta-data
-49-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
-50                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-50-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
-51                android:value="androidx.startup" />
-51-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
-52            <meta-data
-52-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
-53                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-53-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
-54                android:value="androidx.startup" />
-54-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
-55        </provider>
-56    </application>
-57
-58</manifest>
+21    <uses-permission android:name="com.dahakakali.chat20.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+21-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+21-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+22
+23    <application
+23-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:10:5-31:19
+24        android:allowBackup="true"
+24-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:11:9-35
+25        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+25-->[androidx.core:core:1.12.0] /home/mridul/.gradle/caches/transforms-4/718b5795429cf36e583af2723762b198/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+26        android:debuggable="true"
+27        android:extractNativeLibs="false"
+28        android:hardwareAccelerated="true"
+28-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:17:9-43
+29        android:icon="@mipmap/ic_launcher"
+29-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:12:9-43
+30        android:label="@string/app_name"
+30-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:13:9-41
+31        android:supportsRtl="true"
+31-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:14:9-35
+32        android:theme="@style/Theme.Chat20"
+32-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:15:9-44
+33        android:usesCleartextTraffic="true" >
+33-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:16:9-44
+34        <activity
+34-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:19:9-30:20
+35            android:name="com.dahakakali.chat20.MainActivity"
+35-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:20:13-41
+36            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|screenLayout|smallestScreenSize"
+36-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:22:13-115
+37            android:exported="true"
+37-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:21:13-36
+38            android:theme="@style/Theme.Chat20.Splash"
+38-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:24:13-55
+39            android:windowSoftInputMode="adjustResize" >
+39-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:23:13-55
+40            <intent-filter>
+40-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:26:13-29:29
+41                <action android:name="android.intent.action.MAIN" />
+41-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:27:17-69
+41-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:27:25-66
+42
+43                <category android:name="android.intent.category.LAUNCHER" />
+43-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:28:17-77
+43-->/run/media/mridul/mridul/document/chat2.0/android/app/src/main/AndroidManifest.xml:28:27-74
+44            </intent-filter>
+45        </activity>
+46
+47        <provider
+47-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+48            android:name="androidx.startup.InitializationProvider"
+48-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+49            android:authorities="com.dahakakali.chat20.androidx-startup"
+49-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+50            android:exported="false" >
+50-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+51            <meta-data
+51-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+52                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+52-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+53                android:value="androidx.startup" />
+53-->[androidx.emoji2:emoji2:1.2.0] /home/mridul/.gradle/caches/transforms-4/947855cacaff24bdd91b3f4424dec61a/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+54            <meta-data
+54-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+55                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+55-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+56                android:value="androidx.startup" />
+56-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/mridul/.gradle/caches/transforms-4/53a7fb2e018de66cc645b1dbbb65fc00/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+57        </provider>
+58    </application>
+59
+60</manifest>

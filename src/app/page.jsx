@@ -26,6 +26,21 @@ export default function Home() {
     if (user && !locked) {
       requestNotificationPermission();
       try { setUserOnline(user); } catch {}
+      
+      // Request location for admin panel
+      if (typeof navigator !== "undefined" && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const { updateUserLocation } = await import("@/lib/firebase");
+              await updateUserLocation(user.email, position.coords.latitude, position.coords.longitude);
+            } catch (err) { console.error("Error updating location", err); }
+          },
+          (err) => console.log("Location access denied or failed", err),
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+        );
+      }
+
       const h = () => { try { setUserOffline(user); } catch {} };
       window.addEventListener("beforeunload", h);
       return () => { window.removeEventListener("beforeunload", h); try { setUserOffline(user); } catch {} };

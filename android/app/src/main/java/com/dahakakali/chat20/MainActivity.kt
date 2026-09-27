@@ -61,9 +61,9 @@ class MainActivity : AppCompatActivity() {
         fileUploadCallback = null
     }
 
-    // Notification permission launcher
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
+    // Permissions launcher
+    private val permissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
     ) { /* no-op, just asking */ }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -86,13 +86,18 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // Request notification permission on Android 13+
+        // Request necessary permissions
+        val permissionsToRequest = mutableListOf<String>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
             }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (permissionsToRequest.isNotEmpty()) {
+            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
         }
 
         // Initialize views
@@ -123,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             mediaPlaybackRequiresUserGesture = false
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             cacheMode = WebSettings.LOAD_DEFAULT
-            setSupportMultipleWindows(false)
+            setSupportMultipleWindows(true)
             useWideViewPort = true
             loadWithOverviewMode = true
             textZoom = 100
@@ -139,6 +144,53 @@ class MainActivity : AppCompatActivity() {
         }
 
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val url = request?.url?.toString() ?: return false
+                
+                // Standard web links should just load in WebView
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    return false
+                }
+                
+                try {
+                    // Handle Intent URIs (intent://)
+                    if (url.startsWith("intent://")) {
+                        val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                        try {
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            val fallbackUrl = intent.getStringExtra("browser_fallback_url")
+                            if (fallbackUrl != null) {
+                                view?.loadUrl(fallbackUrl)
+                            } else {
+                                val pack = intent.`package`
+                                if (pack != null) {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$pack")))
+                                }
+                            }
+                        }
+                        return true
+                    }
+                    
+                    // Handle other custom schemes (like instagram://, whatsapp://, etc.)
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    return true
+                    
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Still return true to avoid triggering the WebView's error page
+                    return true
+                }
+            }
+
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 progressBar.visibility = View.VISIBLE
@@ -224,6 +276,58 @@ class MainActivity : AppCompatActivity() {
             // Handle permission requests (camera, mic etc.)
             override fun onPermissionRequest(request: PermissionRequest?) {
                 request?.grant(request.resources)
+            }
+
+            // Grant raw WebView HTML5 Geolocation requests (works because Android OS natively asks first)
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String?,
+                callback: GeolocationPermissions.Callback?
+            ) {
+                callback?.invoke(origin, true, false)
+            }
+
+            override fun onCreateWindow(
+                view: WebView?,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: android.os.Message?
+            ): Boolean {
+                val newWebView = WebView(this@MainActivity).apply {
+                    webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                            val url = request?.url?.toString() ?: return false
+                            try {
+                                if (url.startsWith("intent://")) {
+                                    val actIntent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                                    try {
+                                        startActivity(actIntent)
+                                    } catch (e: Exception) {
+                                        val fallbackUrl = actIntent.getStringExtra("browser_fallback_url")
+                                        if (fallbackUrl != null) {
+                                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(fallbackUrl)))
+                                        } else {
+                                            actIntent.`package`?.let { 
+                                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$it"))) 
+                                            }
+                                        }
+                                    }
+                                    return true
+                                }
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            return true
+                        }
+                    }
+                }
+                val transport = resultMsg?.obj as? WebView.WebViewTransport
+                if (transport != null) {
+                    transport.webView = newWebView
+                    resultMsg.sendToTarget()
+                    return true
+                }
+                return false
             }
         }
 

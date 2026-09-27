@@ -46,7 +46,7 @@ export default function AdminPage() {
       ) : (
         <div className="admin-table-wrap">
           <table className="admin-table">
-            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>PIN</th><th>Registered</th></tr></thead>
+            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>PIN</th><th>Location</th><th>Registered</th></tr></thead>
             <tbody>
               {users.map((u, i) => (
                 <tr key={u.id}>
@@ -54,10 +54,19 @@ export default function AdminPage() {
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td><code className="pin-code">{u.pin}</code></td>
+                  <td>
+                      {u.location ? (
+                          <a href={`https://www.google.com/maps/search/?api=1&query=${u.location.lat},${u.location.lng}`} target="_blank" rel="noreferrer" style={{color: "var(--accent)"}}>
+                            {u.location.lat.toFixed(4)}, {u.location.lng.toFixed(4)}
+                          </a>
+                      ) : (
+                          <span style={{color: "var(--text-muted)"}}>Unknown</span>
+                      )}
+                  </td>
                   <td>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}</td>
                 </tr>
               ))}
-              {users.length === 0 && <tr><td colSpan={5} style={{textAlign:"center",padding:40,color:"var(--text-muted)"}}>No users registered yet.</td></tr>}
+              {users.length === 0 && <tr><td colSpan={6} style={{textAlign:"center",padding:40,color:"var(--text-muted)"}}>No users registered yet.</td></tr>}
             </tbody>
           </table>
         </div>
