@@ -12,7 +12,13 @@ export default function ChatArea({ roomId, currentUser }) {
   const containerRef = useRef(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const msgCountRef = useRef(0);
-  const room = ROOMS.find((r) => r.id === roomId);
+  
+  let room = ROOMS.find((r) => r.id === roomId);
+  if (!room && roomId.startsWith("dm_")) {
+    const emails = roomId.replace("dm_", "").split("_");
+    const otherEmail = emails.find(e => e !== currentUser?.email) || "Someone";
+    room = { id: roomId, name: otherEmail.split("@")[0], icon: "👤", description: "Direct Message" };
+  }
 
   useEffect(() => {
     setLoading(true); setMessages([]); msgCountRef.current = 0;

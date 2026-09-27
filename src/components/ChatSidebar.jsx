@@ -17,6 +17,14 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
   }, []);
 
   const handleRoomClick = (roomId) => { onRoomChange(roomId); setMobileOpen(false); };
+  
+  const handleUserClick = (targetUser) => {
+    if (targetUser.email === user?.email) return; // Don't DM yourself
+    const sortedEmails = [user.email, targetUser.email].sort();
+    const dmRoomId = `dm_${sortedEmails[0]}_${sortedEmails[1]}`;
+    onRoomChange(dmRoomId);
+    setMobileOpen(false);
+  };
 
   return (
     <>
@@ -45,11 +53,17 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
           <ul className="user-list">
             {onlineUsers.map((u) => (
               <li key={u.id} className="user-item">
-                <div className="user-avatar-wrapper">
-                  <div className="user-avatar-placeholder">{u.name?.charAt(0)}</div>
-                  <span className="online-dot"></span>
-                </div>
-                <span className="user-name">{u.name}</span>
+                <button 
+                  className={`room-item ${activeRoom.includes(u.email) ? "room-item--active" : ""}`} 
+                  onClick={() => handleUserClick(u)} 
+                  style={{background: 'transparent', padding: '5px 10px', margin: 0, width: '100%', justifyContent: 'flex-start'}}
+                >
+                  <div className="user-avatar-wrapper" style={{marginRight: 10}}>
+                    <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12}}>{u.name?.charAt(0)}</div>
+                    <span className="online-dot"></span>
+                  </div>
+                  <span className="user-name">{u.name} {u.email === user?.email ? "(You)" : ""}</span>
+                </button>
               </li>
             ))}
           </ul>
