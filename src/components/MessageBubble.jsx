@@ -197,18 +197,23 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
                 }
               }}
               style={{
-                padding: '6px 10px',
-                marginBottom: '6px',
-                background: 'rgba(0,0,0,0.15)',
-                borderRadius: '8px',
-                borderLeft: '3px solid var(--primary)',
+                padding: '5px 8px 6px 10px',
+                marginBottom: '4px',
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '4px',
+                borderLeft: '4px solid #00a884', // WhatsApp green style or dynamic
+                borderTopLeftRadius: '2px',
+                borderBottomLeftRadius: '2px',
                 cursor: 'pointer',
-                fontSize: '0.85em',
-                userSelect: 'none'
+                fontSize: '13px',
+                userSelect: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                marginTop: '-2px'
               }}
             >
-              <div style={{fontWeight: 'bold', color: 'var(--primary)', marginBottom: '2px'}}>{message.replyTo.userName}</div>
-              <div style={{opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+              <div style={{fontWeight: 'bold', color: '#00a884', marginBottom: '2px', fontSize: '13px'}}>{message.replyTo.userName}</div>
+              <div style={{color: 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '13px'}}>
                  {message.replyTo.text || (message.replyTo.fileType ? `[${message.replyTo.fileType}]` : "Attachment")}
               </div>
             </div>

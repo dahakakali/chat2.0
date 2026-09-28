@@ -58,10 +58,10 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
         <div className="reply-preview" style={{ 
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
           padding: '8px 12px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px 12px 0 0', 
-          borderLeft: '4px solid var(--primary)', marginBottom: '-4px', zIndex: 1, position: 'relative' 
+          borderLeft: '4px solid #00a884', marginBottom: '-4px', zIndex: 1, position: 'relative' 
         }}>
           <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 'bold' }}>Replying to {replyTo.userName}</span>
+            <span style={{ fontSize: '13px', color: '#00a884', fontWeight: 'bold' }}>{replyTo.userName}</span>
             <span style={{ fontSize: '13px', color: 'var(--text-light)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {replyTo.text || (replyTo.fileType ? `[${replyTo.fileType}]` : "Attachment")}
             </span>
