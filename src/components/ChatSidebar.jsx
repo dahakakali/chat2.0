@@ -107,18 +107,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
       <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar" style={{position: 'relative'}}>
         <span className="toggle-icon">{mobileOpen ? "✕" : "☰"}</span>
         {!mobileOpen && (totalUnread + friendRequests.length) > 0 && (
-          <span style={{
-            position: 'absolute',
-            top: 2,
-            right: 2,
-            background: '#ff4d4d',
-            color: 'white',
-            borderRadius: '10px',
-            padding: '2px 6px',
-            fontSize: '10px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-          }}>
+          <span className="sidebar-toggle-badge">
             {(totalUnread + friendRequests.length) > 99 ? '99+' : (totalUnread + friendRequests.length)}
           </span>
         )}
@@ -129,15 +118,15 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
         </div>
 
         {friendRequests.length > 0 && (
-          <div className="sidebar__section" style={{background: 'rgba(255, 77, 77, 0.1)', padding: '10px', borderRadius: '8px', marginBottom: '10px'}}>
+          <div className="sidebar__section sidebar__section--requests">
             <h3 className="sidebar__section-title">Friend Requests ({friendRequests.length})</h3>
             <ul className="user-list">
               {friendRequests.map(req => (
-                <li key={req.id} style={{fontSize: '12px', marginBottom: '8px'}}>
-                   <div style={{color: 'var(--text-main)'}}>{req.senderName} wants to be friends</div>
-                   <div style={{display: 'flex', gap: '5px', marginTop: '5px'}}>
-                      <button onClick={() => handleRequestAction(req.senderEmail, true)} className="btn btn--primary" style={{padding: '4px 8px', fontSize: '10px', flex: 1}}>Accept</button>
-                      <button onClick={() => handleRequestAction(req.senderEmail, false)} className="btn btn--ghost" style={{padding: '4px 8px', fontSize: '10px', flex: 1}}>Decline</button>
+                <li key={req.id} className="request-item">
+                   <div className="request-item__text">{req.senderName} wants to be friends</div>
+                   <div className="request-item__actions">
+                      <button onClick={() => handleRequestAction(req.senderEmail, true)} className="btn btn--primary btn--sm">Accept</button>
+                      <button onClick={() => handleRequestAction(req.senderEmail, false)} className="btn btn--ghost btn--sm">Decline</button>
                    </div>
                 </li>
               ))}
@@ -146,9 +135,9 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
         )}
 
         <div className="sidebar__section">
-          <div style={{display: 'flex', gap: '5px', marginBottom: '10px'}}>
-             <input type="text" value={addFriendUid} onChange={(e) => setAddFriendUid(e.target.value)} placeholder="Add Friend UID..." style={{flex: 1, padding: '6px', fontSize: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-main)'}} />
-             <button onClick={handleSendRequest} className="btn btn--primary" style={{padding: '6px 10px', fontSize: '12px'}}>+</button>
+          <div className="add-friend-wrapper">
+             <input type="text" value={addFriendUid} onChange={(e) => setAddFriendUid(e.target.value)} placeholder="Add Friend UID..." className="add-friend-input" />
+             <button onClick={handleSendRequest} className="btn btn--primary btn--icon">+</button>
           </div>
           <h3 className="sidebar__section-title">Channels</h3>
           <ul className="room-list">
