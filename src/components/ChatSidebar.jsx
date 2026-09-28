@@ -27,7 +27,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
       const unsubs = [];
       const trackRoom = (roomId) => {
         const lastRead = lastReadTimestamps[roomId] || Date.now();
-        unsubs.push(subscribeToUnreadCount(roomId, lastRead, (count) => {
+        unsubs.push(subscribeToUnreadCount(roomId, lastRead, user.email, (count) => {
           setUnreadCounts(prev => ({ ...prev, [roomId]: count }));
         }));
       };
@@ -45,15 +45,21 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
     }
   }, [user, onlineUsers]);
 
-  // Mark room as read when visited
+  // Mark room as read when visited and update it right as we leave
   useEffect(() => {
     if (activeRoom && user) {
       try {
-        const stored = localStorage.getItem(`lastRead_${user.email}`);
-        const lastReadTimestamps = stored ? JSON.parse(stored) : {};
-        lastReadTimestamps[activeRoom] = Date.now();
-        localStorage.setItem(`lastRead_${user.email}`, JSON.stringify(lastReadTimestamps));
+        const updateReadStatus = () => {
+          const stored = localStorage.getItem(`lastRead_${user.email}`);
+          const lastReadTimestamps = stored ? JSON.parse(stored) : {};
+          lastReadTimestamps[activeRoom] = Date.now();
+          localStorage.setItem(`lastRead_${user.email}`, JSON.stringify(lastReadTimestamps));
+        };
+        
+        updateReadStatus(); // Do it on entry
         setUnreadCounts(prev => ({ ...prev, [activeRoom]: 0 }));
+        
+        return () => updateReadStatus(); // Do it again exactly when we leave the room
       } catch {}
     }
   }, [activeRoom, user]);
@@ -68,7 +74,9 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
     setMobileOpen(false);
   };
 
-  const totalUnread = Object.values(unreadCounts).reduce((a, b) => a + b, 0);
+  const totalUnread = Object.entries(unreadCounts).reduce((total, [roomId, count]) => {
+    return total + (roomId === activeRoom ? 0 : count);
+  }, 0);
 
   return (
     <>

@@ -182,13 +182,19 @@ export function subscribeToMessages(roomId, callback, messageLimit = 500) {
   });
 }
 
-export function subscribeToUnreadCount(roomId, lastReadTime, callback) {
+export function subscribeToUnreadCount(roomId, lastReadTime, currentUserEmail, callback) {
   if (!lastReadTime) return callback(0);
   const messagesRef = collection(db, "rooms", roomId, "messages");
   const q = query(messagesRef, where("createdAt", ">", new Date(lastReadTime)));
   return onSnapshot(q, (snapshot) => {
     if (!snapshot.metadata.hasPendingWrites) {
-      callback(snapshot.size);
+      let unreadCount = 0;
+      snapshot.forEach(doc => {
+        if (doc.data().userEmail !== currentUserEmail) {
+          unreadCount++;
+        }
+      });
+      callback(unreadCount);
     }
   });
 }
