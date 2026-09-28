@@ -1,6 +1,8 @@
 "use client";
 
-export default function MessageBubble({ message, showAvatar, currentUser, friends = [] }) {
+import { useState, useRef } from "react";
+
+export default function MessageBubble({ message, showAvatar, currentUser, friends = [], onReply }) {
   const isOwn = currentUser?.email === message.userEmail;
   const isFriend = friends.includes(message.userEmail);
   const isAI = message.isAI;
@@ -14,6 +16,52 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const [translateX, setTranslateX] = useState(0);
+  const startX = useRef(null);
+  const startY = useRef(null);
+  const isDragging = useRef(false);
+
+  const handlePointerDown = (e) => {
+    isDragging.current = true;
+    startX.current = e.clientX;
+    startY.current = e.clientY;
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging.current || startX.current === null || startY.current === null) return;
+    
+    // Ignore multi-touch
+    if (e.pointerType === 'touch' && !e.isPrimary) return;
+
+    const diffX = e.clientX - startX.current;
+    const diffY = e.clientY - startY.current;
+
+    // Determine intent: if moving mostly vertically, cancel horizontal swipe
+    if (Math.abs(diffY) > Math.abs(diffX) && translateX === 0) {
+      isDragging.current = false;
+      return;
+    }
+
+    if (diffX > 0) {
+      if (diffX < 70) setTranslateX(diffX);
+      else setTranslateX(70 + (diffX - 70) * 0.15); // friction
+    }
+  };
+
+  const handlePointerUp = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    if (translateX > 50 && onReply) {
+      onReply(message);
+    }
+    setTranslateX(0);
+  };
+
+  const handlePointerCancel = () => {
+    isDragging.current = false;
+    setTranslateX(0);
   };
 
   // Convert URLs in messages into clickable links
@@ -91,8 +139,18 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
 
   return (
     <div
+      id={`msg-${message.id}`}
       className={`message ${isOwn ? "message--own" : ""} ${isAI ? "message--ai" : ""
         } ${!showAvatar ? "message--grouped" : ""}`}
+      style={{
+        transform: `translateX(${translateX}px)`,
+        transition: translateX === 0 ? 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none',
+        touchAction: 'pan-y' // enable vertical scroll natively but capture horizontal
+      }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
     >
       {showAvatar && (
         <div className="message__header">
@@ -125,6 +183,37 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
         <div
           className={`message__bubble ${isOwn ? "message__bubble--own" : ""} ${isAI ? "message__bubble--ai" : ""}`}
         >
+          {message.replyTo && (
+            <div 
+              className="message__reply-quote"
+              onClick={() => {
+                const el = document.getElementById(`msg-${message.replyTo.id}`);
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  el.style.transition = 'background-color 0.3s ease';
+                  const origBg = el.style.backgroundColor;
+                  el.style.backgroundColor = 'rgba(150, 150, 150, 0.2)';
+                  setTimeout(() => { el.style.backgroundColor = origBg; }, 1200);
+                }
+              }}
+              style={{
+                padding: '6px 10px',
+                marginBottom: '6px',
+                background: 'rgba(0,0,0,0.15)',
+                borderRadius: '8px',
+                borderLeft: '3px solid var(--primary)',
+                cursor: 'pointer',
+                fontSize: '0.85em',
+                userSelect: 'none'
+              }}
+            >
+              <div style={{fontWeight: 'bold', color: 'var(--primary)', marginBottom: '2px'}}>{message.replyTo.userName}</div>
+              <div style={{opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                 {message.replyTo.text || (message.replyTo.fileType ? `[${message.replyTo.fileType}]` : "Attachment")}
+              </div>
+            </div>
+          )}
+
           {message.text && (
             <p className="message__text">
               {renderTextWithLinks(message.text)}

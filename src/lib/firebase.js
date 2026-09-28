@@ -204,7 +204,8 @@ export async function sendMessage(
   text,
   fileUrl = null,
   fileType = null,
-  fileName = null
+  fileName = null,
+  replyTo = null
 ) {
   const messagesRef = collection(db, "rooms", roomId, "messages");
   await addDoc(messagesRef, {
@@ -217,6 +218,7 @@ export async function sendMessage(
     fileUrl: fileUrl || null,
     fileType: fileType || null,
     fileName: fileName || null,
+    replyTo: replyTo || null,
   });
 }
 

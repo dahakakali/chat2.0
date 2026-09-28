@@ -14,6 +14,7 @@ export default function Home() {
   const { user, loading, locked, unlock, logout } = useAuth();
   const router = useRouter();
   const [activeRoom, setActiveRoom] = useState("general");
+  const [replyTo, setReplyTo] = useState(null);
   const [pinValue, setPinValue] = useState("");
   const [pinError, setPinError] = useState("");
   const [unlocking, setUnlocking] = useState(false);
@@ -105,7 +106,7 @@ export default function Home() {
     <div className="app-layout">
       <ChatSidebar 
         activeRoom={activeRoom} 
-        onRoomChange={setActiveRoom} 
+        onRoomChange={(room) => { setActiveRoom(room); setReplyTo(null); }} 
         friends={friends}
         friendRequests={friendRequests}
       />
@@ -114,8 +115,14 @@ export default function Home() {
           roomId={activeRoom} 
           currentUser={user} 
           friends={friends}
+          onReply={setReplyTo}
         />
-        <MessageInput roomId={activeRoom} currentUser={user} />
+        <MessageInput 
+          roomId={activeRoom} 
+          currentUser={user} 
+          replyTo={replyTo}
+          onClearReply={() => setReplyTo(null)}
+        />
       </main>
     </div>
   );

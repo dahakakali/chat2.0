@@ -5,7 +5,7 @@ import { subscribeToMessages, ROOMS } from "@/lib/firebase";
 import { showNotification } from "@/lib/notifications";
 import MessageBubble from "./MessageBubble";
 
-export default function ChatArea({ roomId, currentUser, friends = [] }) {
+export default function ChatArea({ roomId, currentUser, friends = [], onReply }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
@@ -175,7 +175,7 @@ export default function ChatArea({ roomId, currentUser, friends = [] }) {
         ) : (
           messages.map((msg, i) => {
             const prev = i > 0 ? messages[i - 1] : null;
-            return <MessageBubble key={msg.id} message={msg} showAvatar={!prev || prev.userEmail !== msg.userEmail} currentUser={currentUser} friends={friends} />;
+            return <MessageBubble key={msg.id} message={msg} showAvatar={!prev || prev.userEmail !== msg.userEmail} currentUser={currentUser} friends={friends} onReply={() => onReply(msg)} />;
           })
         )}
         <div ref={messagesEndRef} />

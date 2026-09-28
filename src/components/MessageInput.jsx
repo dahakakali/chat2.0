@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { sendMessage, sendAIMessage, uploadFile, getFileType } from "@/lib/firebase";
 
-export default function MessageInput({ roomId, currentUser }) {
+export default function MessageInput({ roomId, currentUser, replyTo, onClearReply }) {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -15,7 +15,10 @@ export default function MessageInput({ roomId, currentUser }) {
     if (!trimmed || !currentUser || sending) return;
     setSending(true); setText("");
     try {
-      await sendMessage(roomId, currentUser, trimmed);
+      const replyData = replyTo ? { id: replyTo.id, userName: replyTo.userName, text: replyTo.text, fileType: replyTo.fileType } : null;
+      await sendMessage(roomId, currentUser, trimmed, null, null, null, replyData);
+      
+      if (onClearReply) onClearReply();
       // Check for @AI mention
       if (/@ai\b/i.test(trimmed)) {
         const clean = trimmed.replace(/@ai\b/gi, "").trim();
@@ -40,7 +43,9 @@ export default function MessageInput({ roomId, currentUser }) {
     try {
       const url = await uploadFile(roomId, file);
       const type = getFileType(file);
-      await sendMessage(roomId, currentUser, "", url, type, file.name);
+      const replyData = replyTo ? { id: replyTo.id, userName: replyTo.userName, text: replyTo.text, fileType: replyTo.fileType } : null;
+      await sendMessage(roomId, currentUser, "", url, type, file.name, replyData);
+      if (onClearReply) onClearReply();
     } catch (e) { alert("Upload failed: " + e.message); }
     finally { setUploading(false); fileRef.current.value = ""; }
   };
@@ -48,8 +53,25 @@ export default function MessageInput({ roomId, currentUser }) {
   const handleKeyDown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
   return (
-    <div className="message-input">
-      <div className="message-input__wrapper">
+    <div className="message-input" style={{ flexDirection: 'column' }}>
+      {replyTo && (
+        <div className="reply-preview" style={{ 
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+          padding: '8px 12px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px 12px 0 0', 
+          borderLeft: '4px solid var(--primary)', marginBottom: '-4px', zIndex: 1, position: 'relative' 
+        }}>
+          <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 'bold' }}>Replying to {replyTo.userName}</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-light)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {replyTo.text || (replyTo.fileType ? `[${replyTo.fileType}]` : "Attachment")}
+            </span>
+          </div>
+          <button onClick={onClearReply} style={{ background: 'transparent', border: 'none', color: 'var(--text-light)', cursor: 'pointer', padding: '4px' }}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
+          </button>
+        </div>
+      )}
+      <div className="message-input__wrapper" style={{ borderRadius: replyTo ? '0 0 24px 24px' : '24px' }}>
         <button className="attach-btn" onClick={() => fileRef.current?.click()} disabled={uploading} title="Attach file">
           {uploading ? <span className="send-spinner"></span> : "📎"}
         </button>
