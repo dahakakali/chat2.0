@@ -127,11 +127,17 @@ export default function ChatArea({ roomId, currentUser, friends = [] }) {
       <div className="chat-header">
         <div className="chat-header__info">
           <span className="chat-header__icon">{room?.icon}</span>
-          <div><h2 className="chat-header__name">{room?.name}</h2><p className="chat-header__desc">{room?.description}</p></div>
+          <div style={{minWidth: 0, flex: 1}}>
+            <h2 className="chat-header__name" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{room?.name}</h2>
+            <p className="chat-header__desc" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{room?.description}</p>
+          </div>
         </div>
-        <div className="chat-header__hint" style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-          <span>Type <code>@AI</code> to chat with Luna</span>
-          <button onClick={() => setProfileModalOpen(true)} aria-label="Profile Settings" style={{background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', marginLeft: '10px'}}>
+        
+        <div className="chat-header__actions" style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+          <div className="chat-header__hint">
+            Type <code>@AI</code> to chat with Luna
+          </div>
+          <button className="profile-settings-btn" onClick={() => setProfileModalOpen(true)} aria-label="Profile Settings" style={{background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexShrink: 0}}>
              {currentUser?.photoURL ? (
                 <img src={currentUser.photoURL} alt="profile" style={{width: 36, height: 36, borderRadius: '50%', objectFit: 'cover'}} />
              ) : (
