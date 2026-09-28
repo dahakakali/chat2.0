@@ -156,7 +156,11 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
           <div className="sidebar__footer">
             <div className="current-user">
               <div className="user-avatar-wrapper">
-                <div className="user-avatar-placeholder">{user.name?.charAt(0)}</div>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="avatar" style={{width: 36, height: 36, borderRadius: '50%', objectFit: 'cover'}} />
+                ) : (
+                  <div className="user-avatar-placeholder">{user.name?.charAt(0)}</div>
+                )}
                 <span className="online-dot"></span>
               </div>
               <div className="current-user-info">

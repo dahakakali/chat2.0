@@ -70,18 +70,22 @@ export async function registerUser(name, email, pin) {
   try {
     const userRef = doc(db, "users", email);
     const existing = await getDoc(userRef);
-    console.log("[registerUser] Existing user check, exists:", existing.exists());
     if (existing.exists()) {
-      throw new Error("An account with this email already exists. Please login instead.");
+      throw new Error("An account with this email already exists.");
     }
+    
+    const hex = Math.floor(Math.random() * 1048576).toString(16).padStart(5, '0');
+    const customUID = `${name.replace(/\s+/g, '')}@${hex}`;
+
     await setDoc(userRef, {
       name,
       email,
       pin,
+      uid: customUID,
+      photoURL: null,
       createdAt: serverTimestamp(),
     });
-    console.log("[registerUser] ✅ Registration successful for:", email);
-    return { name, email };
+    return { name, email, uid: customUID, photoURL: null };
   } catch (err) {
     console.error("[registerUser] ❌ Registration error:", err.code || err.message || err);
     throw err;
@@ -92,9 +96,7 @@ export async function loginUser(email, pin) {
   console.log("[loginUser] Attempting login for:", email);
   try {
     const userRef = doc(db, "users", email);
-    console.log("[loginUser] Firestore doc ref created, fetching...");
     const userDoc = await getDoc(userRef);
-    console.log("[loginUser] Firestore response received, exists:", userDoc.exists());
     if (!userDoc.exists()) {
       throw new Error("No account found with this email.");
     }
@@ -102,12 +104,29 @@ export async function loginUser(email, pin) {
     if (userData.pin !== pin) {
       throw new Error("Incorrect PIN. Please try again.");
     }
-    console.log("[loginUser] ✅ Login successful for:", email);
-    return { name: userData.name, email: userData.email };
+    
+    let currentUid = userData.uid;
+    if (!currentUid) {
+      const hex = Math.floor(Math.random() * 1048576).toString(16).padStart(5, '0');
+      currentUid = `${userData.name.replace(/\s+/g, '')}@${hex}`;
+      await setDoc(userRef, { uid: currentUid }, { merge: true });
+    }
+
+    return { 
+      name: userData.name, 
+      email: userData.email, 
+      uid: currentUid, 
+      photoURL: userData.photoURL || null 
+    };
   } catch (err) {
     console.error("[loginUser] ❌ Login error:", err.code || err.message || err);
     throw err;
   }
+}
+
+export async function updateUserProfile(email, photoURL) {
+  const userRef = doc(db, "users", email);
+  await setDoc(userRef, { photoURL }, { merge: true });
 }
 
 export async function verifyPin(email, pin) {
