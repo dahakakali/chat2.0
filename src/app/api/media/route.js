@@ -1,54 +1,35 @@
-import { get } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
     const searchParams = new URL(request.url).searchParams;
-    let pathname = searchParams.get('pathname');
-    const legacyUrl = searchParams.get('url');
+    let url = searchParams.get('pathname') || searchParams.get('url');
 
-    // Handle legacy messages that used full blob URLs instead of pathnames
-    if (!pathname && legacyUrl) {
-      try {
-        pathname = new URL(legacyUrl).pathname.replace(/^\/+/, '');
-      } catch (e) {
-        /* ignore invalid URLs */
-      }
+    if (!url) {
+      return new NextResponse('Missing url parameter', { status: 400 });
     }
 
-    if (!pathname) {
-      return new NextResponse('Missing pathname parameter', {
-        status: 400,
-      });
+    // Attempt to parse if they passed just a pathname to the Vercel bucket domain
+    if (!url.startsWith('http')) {
+       url = `https://hbj2sufsillhpkkr.public.blob.vercel-storage.com/${url.replace(/^\/+/, '')}`;
     }
 
-    const result = await get(pathname, {
-      access: 'private',
-    });
-
-    if (!result || result.statusCode !== 200) {
-      console.error('Blob not found:', pathname);
-
-      return new NextResponse('Blob not found', {
-        status: 404,
-      });
+    const result = await fetch(url);
+    if (!result.ok) {
+        console.error('Blob fetch failed:', result.statusText);
+        return new NextResponse('Blob not found', { status: 404 });
     }
 
-    return new NextResponse(result.stream, {
+    return new NextResponse(result.body, {
       status: 200,
       headers: {
-        'Content-Type':
-          result.blob.contentType || 'application/octet-stream',
+        'Content-Type': result.headers.get('content-type') || 'application/octet-stream',
         'X-Content-Type-Options': 'nosniff',
-        'Cache-Control': 'private, no-cache',
+        'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
   } catch (error) {
-    console.error('Vercel Blob proxy error:', error);
-
-    return new NextResponse(
-      error?.message || 'Failed to retrieve private media',
-      { status: 500 }
-    );
+    console.error('Error in media proxy:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

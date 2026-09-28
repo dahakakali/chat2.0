@@ -172,6 +172,8 @@ export function subscribeToFriendRequests(email, callback) {
   const reqRef = collection(db, "users", email, "friendRequests");
   return onSnapshot(reqRef, (snapshot) => {
     callback(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+  }, (error) => {
+    console.warn("Firebase rules restrict friendRequest listening:", error.message);
   });
 }
 
@@ -180,6 +182,8 @@ export function subscribeToFriends(email, callback) {
   const friendsRef = collection(db, "users", email, "friends");
   return onSnapshot(friendsRef, (snapshot) => {
     callback(snapshot.docs.map(d => d.id));
+  }, (error) => {
+    console.warn("Firebase rules restrict friends listening:", error.message);
   });
 }
 
