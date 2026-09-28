@@ -1,0 +1,101 @@
+
+> chat2.0@0.1.0 lint
+> eslint
+
+
+/run/media/mridul/mridul/document/chat2.0/src/app/admin/page.jsx
+  24:54  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  22 |   useEffect(() => {
+  23 |     if (!user) return;
+> 24 |     if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) { setError("Access denied. Admin only."); setFetching(false); return; }
+     |                                                      ^^^^^^^^ Avoid calling setState() directly within an effect
+  25 |     (async () => {
+  26 |       try {
+  27 |         const data = await getAllUsers();  react-hooks/set-state-in-effect
+
+/run/media/mridul/mridul/document/chat2.0/src/components/ChatArea.jsx
+   30:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+   52:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  50 |       }
+  51 |     } else {
+> 52 |       setDmUser(null);
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  53 |     }
+  54 |   }, [roomId, currentUser?.email]);
+  55 |                                                                                                                                                                          react-hooks/set-state-in-effect
+   57:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  55 |
+  56 |   useEffect(() => {
+> 57 |     setLoading(true); setMessages([]); msgCountRef.current = 0;
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |     const unsub = subscribeToMessages(roomId, (msgs) => {
+  59 |       // Notification for new messages
+  60 |       if (msgs.length > msgCountRef.current && msgCountRef.current > 0) {  react-hooks/set-state-in-effect
+  123:6   warning  React Hook useEffect has missing dependencies: 'auth' and 'currentUser'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+  142:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+  155:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+  155:41  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             jsx-a11y/alt-text
+
+/run/media/mridul/mridul/document/chat2.0/src/components/ChatSidebar.jsx
+   84:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  82 |         
+  83 |         updateReadStatus(); // Do it on entry
+> 84 |         setUnreadCounts(prev => ({ ...prev, [activeRoom]: 0 }));
+     |         ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  85 |         
+  86 |         return () => updateReadStatus(); // Do it again exactly when we leave the room
+  87 |       } catch {}  react-hooks/set-state-in-effect
+  179:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @next/next/no-img-element
+  200:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @next/next/no-img-element
+
+/run/media/mridul/mridul/document/chat2.0/src/components/MessageBubble.jsx
+   97:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  161:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/run/media/mridul/mridul/document/chat2.0/src/lib/auth-context.js
+  21:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  19 |       const elapsed = Date.now() - session.loginTime;
+  20 |       if (elapsed > SESSION_DURATION) {
+> 21 |         setUser(session);
+     |         ^^^^^^^ Avoid calling setState() directly within an effect
+  22 |         setLocked(true);
+  23 |       } else {
+  24 |         setUser(session);  react-hooks/set-state-in-effect
+
+✖ 14 problems (5 errors, 9 warnings)
+

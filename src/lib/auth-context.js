@@ -14,18 +14,20 @@ export function AuthProvider({ children }) {
 
   // Check session on mount
   useEffect(() => {
-    const session = getSession();
-    if (session) {
-      const elapsed = Date.now() - session.loginTime;
-      if (elapsed > SESSION_DURATION) {
-        setUser(session);
-        setLocked(true);
-      } else {
-        setUser(session);
-        setLocked(false);
+    setTimeout(() => {
+      const session = getSession();
+      if (session) {
+        const elapsed = Date.now() - session.loginTime;
+        if (elapsed > SESSION_DURATION) {
+          setUser(session);
+          setLocked(true);
+        } else {
+          setUser(session);
+          setLocked(false);
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    }, 0);
   }, []);
 
   // Periodically check session expiry

@@ -81,7 +81,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
         };
         
         updateReadStatus(); // Do it on entry
-        setUnreadCounts(prev => ({ ...prev, [activeRoom]: 0 }));
+        setTimeout(() => setUnreadCounts(prev => ({ ...prev, [activeRoom]: 0 })), 0);
         
         return () => updateReadStatus(); // Do it again exactly when we leave the room
       } catch {}

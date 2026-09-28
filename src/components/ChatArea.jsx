@@ -49,12 +49,12 @@ export default function ChatArea({ roomId, currentUser, friends = [], onReply })
          }).catch(()=>{});
       }
     } else {
-      setDmUser(null);
+      setTimeout(() => setDmUser(null), 0);
     }
   }, [roomId, currentUser?.email]);
 
   useEffect(() => {
-    setLoading(true); setMessages([]); msgCountRef.current = 0;
+    setTimeout(() => { setLoading(true); setMessages([]); msgCountRef.current = 0; }, 0);
     const unsub = subscribeToMessages(roomId, (msgs) => {
       // Notification for new messages
       if (msgs.length > msgCountRef.current && msgCountRef.current > 0) {
@@ -120,7 +120,7 @@ export default function ChatArea({ roomId, currentUser, friends = [], onReply })
           }
        }).catch((err)=>{ console.error("UID generation failed", err) });
     }
-  }, [currentUser?.email]);
+  }, [currentUser?.email, currentUser, auth]);
 
   return (
     <div className="chat-area">
@@ -152,7 +152,7 @@ export default function ChatArea({ roomId, currentUser, friends = [], onReply })
           <div style={{background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', width: '320px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)'}}>
             <h2 style={{marginTop: 0, marginBottom: '24px'}}>Your Profile</h2>
             <div style={{width: 90, height: 90, borderRadius: '50%', background: 'var(--accent)', color: '#fff', fontSize: '36px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', overflow: 'hidden'}}>
-               {currentUser?.photoURL ? <img src={currentUser.photoURL} style={{width: '100%', height: '100%', objectFit: 'cover'}} /> : currentUser?.name?.charAt(0)}
+               {currentUser?.photoURL ? <img src={currentUser.photoURL} alt="profile" style={{width: '100%', height: '100%', objectFit: 'cover'}} /> : currentUser?.name?.charAt(0)}
             </div>
             
             <h3 style={{margin: '0 0 4px 0', fontSize: '18px'}}>{currentUser?.name}</h3>

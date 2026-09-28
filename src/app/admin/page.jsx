@@ -21,7 +21,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!user) return;
-    if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) { setError("Access denied. Admin only."); setFetching(false); return; }
+    if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) { setTimeout(() => { setError("Access denied. Admin only."); setFetching(false); }, 0); return; }
     (async () => {
       try {
         const data = await getAllUsers();
