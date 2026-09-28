@@ -1,4 +1,3 @@
-import { get } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
@@ -10,24 +9,34 @@ export async function GET(request) {
       return new NextResponse('Missing url parameter', { status: 400 });
     }
 
-    if (!url.startsWith('http')) {
-      url = `https://hbj2sufsillhpkkr.public.blob.vercel-storage.com/${url.replace(/^\/+/, '')}`;
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) {
+      return new NextResponse('Server configuration error', { status: 500 });
     }
 
-    // Must use '@vercel/blob' get() with full URL because these blobs are 'access: private'
-    const result = await get(url, {
-      access: 'private',
+    const storeId = token.split('_')[3].toLowerCase();
+
+    if (!url.startsWith('http')) {
+      url = `https://${storeId}.public.blob.vercel-storage.com/${url.replace(/^\/+/, '')}`;
+    }
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      cache: 'no-store'
     });
 
-    if (!result || result.statusCode !== 200) {
-      console.error('Blob not found:', url);
-      return new NextResponse('Blob not found', { status: 404 });
+    if (!response.ok) {
+      console.error(`Blob fetch failed: ${response.status} ${response.statusText} - ${url}`);
+      return new NextResponse('Blob not found', { status: response.status === 404 ? 404 : 500 });
     }
 
-    return new NextResponse(result.stream, {
+    return new NextResponse(response.body, {
       status: 200,
       headers: {
-        'Content-Type': result.blob.contentType || 'application/octet-stream',
+        'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
         'X-Content-Type-Options': 'nosniff',
         'Cache-Control': 'public, max-age=31536000, immutable',
       },
