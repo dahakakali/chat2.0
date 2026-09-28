@@ -3,7 +3,18 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
-    const pathname = new URL(request.url).searchParams.get('pathname');
+    const searchParams = new URL(request.url).searchParams;
+    let pathname = searchParams.get('pathname');
+    const legacyUrl = searchParams.get('url');
+
+    // Handle legacy messages that used full blob URLs instead of pathnames
+    if (!pathname && legacyUrl) {
+      try {
+        pathname = new URL(legacyUrl).pathname.replace(/^\/+/, '');
+      } catch (e) {
+        /* ignore invalid URLs */
+      }
+    }
 
     if (!pathname) {
       return new NextResponse('Missing pathname parameter', {
