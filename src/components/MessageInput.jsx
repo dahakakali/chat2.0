@@ -62,7 +62,18 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
         }}>
           <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <span style={{ fontSize: '13px', color: '#00a884', fontWeight: 'bold' }}>{replyTo.userName}</span>
-            <span style={{ fontSize: '13px', color: 'var(--text-light)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <span style={{ 
+                fontSize: '13px', 
+                color: 'var(--text-light)', 
+                display: '-webkit-box',
+                WebkitLineClamp: 4,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                lineHeight: '1.3'
+              }}>
               {replyTo.text || (replyTo.fileType ? `[${replyTo.fileType}]` : "Attachment")}
             </span>
           </div>

@@ -250,7 +250,20 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
               }}
             >
               <div style={{fontWeight: '600', color: '#00a884', marginBottom: '4px', fontSize: '12px'}}>{message.replyTo.userName}</div>
-              <div style={{color: 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '13px', lineHeight: '1.2'}}>
+              <div 
+                 style={{
+                   color: 'rgba(255,255,255,0.7)', 
+                   display: '-webkit-box',
+                   WebkitLineClamp: 4,
+                   WebkitBoxOrient: 'vertical',
+                   overflow: 'hidden',
+                   textOverflow: 'ellipsis',
+                   fontSize: '13px', 
+                   lineHeight: '1.3',
+                   whiteSpace: 'pre-wrap',
+                   wordBreak: 'break-word'
+                 }}
+              >
                  {message.replyTo.text || (message.replyTo.fileType ? `[${message.replyTo.fileType}]` : "Attachment")}
               </div>
             </div>
