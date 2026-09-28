@@ -31,31 +31,37 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
 
   const handlePointerMove = (e) => {
     if (!isDragging.current || startX.current === null || startY.current === null) return;
-    
-    // Ignore multi-touch
     if (e.pointerType === 'touch' && !e.isPrimary) return;
-
     const diffX = e.clientX - startX.current;
     const diffY = e.clientY - startY.current;
-
-    // Determine intent: if moving mostly vertically, cancel horizontal swipe
-    if (Math.abs(diffY) > Math.abs(diffX) && translateX === 0) {
-      isDragging.current = false;
-      return;
-    }
-
+    if (Math.abs(diffY) > Math.abs(diffX) && translateX === 0) { isDragging.current = false; return; }
     if (diffX > 0) {
       if (diffX < 70) setTranslateX(diffX);
-      else setTranslateX(70 + (diffX - 70) * 0.15); // friction
+      else setTranslateX(70 + (diffX - 70) * 0.15);
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    isDragging.current = true;
+    startX.current = e.touches[0].clientX;
+    startY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging.current || startX.current === null || startY.current === null) return;
+    const diffX = e.touches[0].clientX - startX.current;
+    const diffY = e.touches[0].clientY - startY.current;
+    if (Math.abs(diffY) > Math.abs(diffX) && translateX === 0) { isDragging.current = false; return; }
+    if (diffX > 0) {
+      if (diffX < 70) setTranslateX(diffX);
+      else setTranslateX(70 + (diffX - 70) * 0.15);
     }
   };
 
   const handlePointerUp = () => {
     if (!isDragging.current) return;
     isDragging.current = false;
-    if (translateX > 50 && onReply) {
-      onReply(message);
-    }
+    if (translateX > 50 && onReply) onReply(message);
     setTranslateX(0);
   };
 
@@ -138,20 +144,52 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
   };
 
   return (
-    <div
-      id={`msg-${message.id}`}
-      className={`message ${isOwn ? "message--own" : ""} ${isAI ? "message--ai" : ""
-        } ${!showAvatar ? "message--grouped" : ""}`}
-      style={{
-        transform: `translateX(${translateX}px)`,
-        transition: translateX === 0 ? 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none',
-        touchAction: 'pan-y' // enable vertical scroll natively but capture horizontal
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerCancel}
-    >
+    <div style={{ position: 'relative', overflow: 'visible' }}>
+      <div 
+        className="message-swipe-indicator" 
+        style={{
+          position: 'absolute',
+          left: '12px',
+          top: '50%',
+          marginTop: '-16px',
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: Math.min(translateX / 50, 1),
+          transform: `scale(${Math.min(0.5 + (translateX / 100), 1)})`,
+          transition: translateX === 0 ? 'opacity 0.2s, transform 0.2s' : 'none',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z" />
+        </svg>
+      </div>
+
+      <div
+        id={`msg-${message.id}`}
+        className={`message ${isOwn ? "message--own" : ""} ${isAI ? "message--ai" : ""
+          } ${!showAvatar ? "message--grouped" : ""}`}
+        style={{
+          transform: `translateX(${translateX}px)`,
+          transition: translateX === 0 ? 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none',
+          touchAction: 'pan-y',
+          position: 'relative',
+          zIndex: 1
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handlePointerUp}
+      >
       {showAvatar && (
         <div className="message__header">
           <div className="message__avatar">
@@ -226,6 +264,7 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
           )}
 
           {renderMedia()}
+        </div>
         </div>
       </div>
     </div>
