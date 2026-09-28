@@ -5,7 +5,7 @@ import { subscribeToMessages, ROOMS } from "@/lib/firebase";
 import { showNotification } from "@/lib/notifications";
 import MessageBubble from "./MessageBubble";
 
-export default function ChatArea({ roomId, currentUser }) {
+export default function ChatArea({ roomId, currentUser, friends = [] }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
@@ -22,10 +22,11 @@ export default function ChatArea({ roomId, currentUser }) {
   if (!room && roomId.startsWith("dm_")) {
     const emails = roomId.replace("dm_", "").split("_");
     const otherEmail = emails.find(e => e !== currentUser?.email) || "Someone";
+    const isFriend = friends?.includes(otherEmail);
     room = { 
       id: roomId, 
       name: dmUser?.name || otherEmail.split("@")[0], 
-      icon: dmUser?.photoURL ? (
+      icon: (isFriend && dmUser?.photoURL) ? (
         <img src={dmUser.photoURL} alt="profile" style={{width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', display: 'block'}} />
       ) : (
         <div style={{width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent)', color: '#fff', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>{(dmUser?.name || otherEmail).charAt(0)}</div>
@@ -168,7 +169,7 @@ export default function ChatArea({ roomId, currentUser }) {
         ) : (
           messages.map((msg, i) => {
             const prev = i > 0 ? messages[i - 1] : null;
-            return <MessageBubble key={msg.id} message={msg} showAvatar={!prev || prev.userEmail !== msg.userEmail} currentUser={currentUser} />;
+            return <MessageBubble key={msg.id} message={msg} showAvatar={!prev || prev.userEmail !== msg.userEmail} currentUser={currentUser} friends={friends} />;
           })
         )}
         <div ref={messagesEndRef} />

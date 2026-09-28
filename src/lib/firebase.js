@@ -146,6 +146,52 @@ export async function getAllUsers() {
   }));
 }
 
+// ===================== FRIEND FUNCTIONS =====================
+
+export async function sendFriendRequest(senderEmail, senderName, targetUid) {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("uid", "==", targetUid));
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) throw new Error("No user found with this UID.");
+  
+  const targetUserDoc = snapshot.docs[0];
+  const targetEmail = targetUserDoc.id;
+  
+  if (targetEmail === senderEmail) throw new Error("You cannot add yourself.");
+  
+  const reqRef = doc(db, "users", targetEmail, "friendRequests", senderEmail);
+  await setDoc(reqRef, {
+    senderEmail,
+    senderName,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export function subscribeToFriendRequests(email, callback) {
+  if (!email) return () => {};
+  const reqRef = collection(db, "users", email, "friendRequests");
+  return onSnapshot(reqRef, (snapshot) => {
+    callback(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+  });
+}
+
+export function subscribeToFriends(email, callback) {
+  if (!email) return () => {};
+  const friendsRef = collection(db, "users", email, "friends");
+  return onSnapshot(friendsRef, (snapshot) => {
+    callback(snapshot.docs.map(d => d.id));
+  });
+}
+
+export async function handleFriendRequest(currentUserEmail, senderEmail, accept) {
+  const reqRef = doc(db, "users", currentUserEmail, "friendRequests", senderEmail);
+  if (accept) {
+    await setDoc(doc(db, "users", currentUserEmail, "friends", senderEmail), { addedAt: serverTimestamp() });
+    await setDoc(doc(db, "users", senderEmail, "friends", currentUserEmail), { addedAt: serverTimestamp() });
+  }
+  await deleteDoc(reqRef);
+}
+
 // ===================== MESSAGE FUNCTIONS =====================
 
 export async function sendMessage(

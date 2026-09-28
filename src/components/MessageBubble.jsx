@@ -1,8 +1,11 @@
 "use client";
 
-export default function MessageBubble({ message, showAvatar, currentUser }) {
+export default function MessageBubble({ message, showAvatar, currentUser, friends = [] }) {
   const isOwn = currentUser?.email === message.userEmail;
+  const isFriend = friends.includes(message.userEmail);
   const isAI = message.isAI;
+  
+  const canSeeProfile = isOwn || isFriend || isAI;
 
   const formatTime = (date) => {
     if (!date) return "";
@@ -96,7 +99,7 @@ export default function MessageBubble({ message, showAvatar, currentUser }) {
           <div className="message__avatar">
             {isAI ? (
               <div className="ai-avatar">🤖</div>
-            ) : message.userPhoto ? (
+            ) : (canSeeProfile && message.userPhoto) ? (
               <img src={message.userPhoto} alt="avatar" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%'}} />
             ) : (
               <div className="message__avatar-placeholder">

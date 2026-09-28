@@ -5,11 +5,35 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
 
-export default function ChatSidebar({ activeRoom, onRoomChange }) {
+export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], friendRequests = [] }) {
   const { user, logout } = useAuth();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [unreadCounts, setUnreadCounts] = useState({});
+  const [addFriendUid, setAddFriendUid] = useState("");
+
+  const handleSendRequest = async () => {
+    if (!addFriendUid.trim()) return;
+    try {
+      const { sendFriendRequest } = await import("@/lib/firebase");
+      await sendFriendRequest(user.email, user.name, addFriendUid.trim());
+      setAddFriendUid("");
+      alert("Friend Request Sent!");
+    } catch (err) {
+      alert(err.message || "Failed to send request.");
+    }
+  };
+
+  const handleRequestAction = async (senderEmail, accept) => {
+    try {
+      const { handleFriendRequest } = await import("@/lib/firebase");
+      await handleFriendRequest(user.email, senderEmail, accept);
+    } catch (err) {
+      alert("Error handling request.");
+    }
+  };
+
+  // ... (keeping original useEffects below but replacing the entire component appropriately)
 
   useEffect(() => {
     let unsub;
@@ -82,7 +106,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
     <>
       <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar" style={{position: 'relative'}}>
         <span className="toggle-icon">{mobileOpen ? "✕" : "☰"}</span>
-        {!mobileOpen && totalUnread > 0 && (
+        {!mobileOpen && (totalUnread + friendRequests.length) > 0 && (
           <span style={{
             position: 'absolute',
             top: 2,
@@ -95,7 +119,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
             fontWeight: 'bold',
             boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
           }}>
-            {totalUnread > 99 ? '99+' : totalUnread}
+            {(totalUnread + friendRequests.length) > 99 ? '99+' : (totalUnread + friendRequests.length)}
           </span>
         )}
       </button>
@@ -103,7 +127,29 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
         <div className="sidebar__header">
           <div className="sidebar__logo"><span className="logo-icon">⚡</span><span className="logo-text">Chat 2.0</span></div>
         </div>
+
+        {friendRequests.length > 0 && (
+          <div className="sidebar__section" style={{background: 'rgba(255, 77, 77, 0.1)', padding: '10px', borderRadius: '8px', marginBottom: '10px'}}>
+            <h3 className="sidebar__section-title">Friend Requests ({friendRequests.length})</h3>
+            <ul className="user-list">
+              {friendRequests.map(req => (
+                <li key={req.id} style={{fontSize: '12px', marginBottom: '8px'}}>
+                   <div style={{color: 'var(--text-main)'}}>{req.senderName} wants to be friends</div>
+                   <div style={{display: 'flex', gap: '5px', marginTop: '5px'}}>
+                      <button onClick={() => handleRequestAction(req.senderEmail, true)} className="btn btn--primary" style={{padding: '4px 8px', fontSize: '10px', flex: 1}}>Accept</button>
+                      <button onClick={() => handleRequestAction(req.senderEmail, false)} className="btn btn--ghost" style={{padding: '4px 8px', fontSize: '10px', flex: 1}}>Decline</button>
+                   </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="sidebar__section">
+          <div style={{display: 'flex', gap: '5px', marginBottom: '10px'}}>
+             <input type="text" value={addFriendUid} onChange={(e) => setAddFriendUid(e.target.value)} placeholder="Add Friend UID..." style={{flex: 1, padding: '6px', fontSize: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-main)'}} />
+             <button onClick={handleSendRequest} className="btn btn--primary" style={{padding: '6px 10px', fontSize: '12px'}}>+</button>
+          </div>
           <h3 className="sidebar__section-title">Channels</h3>
           <ul className="room-list">
             {ROOMS.map((room) => (
@@ -131,6 +177,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
               const sorted = user ? [user.email, u.email].sort() : [];
               const dmRoomId = user ? `dm_${sorted[0]}_${sorted[1]}` : "";
               const unread = unreadCounts[dmRoomId] || 0;
+              const isFriend = friends.includes(u.email);
               return (
                 <li key={u.id} className="user-item">
                   <button 
@@ -139,7 +186,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
                     style={{background: 'transparent', padding: '5px 10px', margin: 0, width: '100%', display: 'flex', alignItems: 'center'}}
                   >
                     <div className="user-avatar-wrapper" style={{marginRight: 10}}>
-                      {u.photoURL ? (
+                      {isFriend && u.photoURL ? (
                         <img src={u.photoURL} alt="avatar" style={{width: 24, height: 24, borderRadius: '50%', objectFit: 'cover'}} />
                       ) : (
                         <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12, lineHeight:'24px'}}>{u.name?.charAt(0)}</div>
@@ -169,7 +216,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
               </div>
               <div className="current-user-info">
                 <span className="current-user-name">{user.name}</span>
-                <span className="current-user-email">{user.email}</span>
+                <span className="current-user-email" style={{fontSize: '10px'}}>{user.uid || user.email}</span>
               </div>
               <Link href="/admin" className="admin-btn" title="Admin">🛡️</Link>
               <button className="logout-btn" onClick={logout} title="Sign out">↪</button>

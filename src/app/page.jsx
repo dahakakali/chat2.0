@@ -17,10 +17,29 @@ export default function Home() {
   const [pinValue, setPinValue] = useState("");
   const [pinError, setPinError] = useState("");
   const [unlocking, setUnlocking] = useState(false);
+  
+  const [friends, setFriends] = useState([]);
+  const [friendRequests, setFriendRequests] = useState([]);
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
   }, [loading, user, router]);
+
+  useEffect(() => {
+    if (user && !locked) {
+      import("@/lib/firebase").then(({ subscribeToFriends, subscribeToFriendRequests }) => {
+        const unsubP = subscribeToFriends(user.email, setFriends);
+        const unsubR = subscribeToFriendRequests(user.email, setFriendRequests);
+        window._unsubFriends = unsubP;
+        window._unsubReqs = unsubR;
+      }).catch(()=>{});
+
+      return () => {
+         if (window._unsubFriends) window._unsubFriends();
+         if (window._unsubReqs) window._unsubReqs();
+      }
+    }
+  }, [user, locked]);
 
   useEffect(() => {
     if (user && !locked) {
@@ -84,9 +103,18 @@ export default function Home() {
 
   return (
     <div className="app-layout">
-      <ChatSidebar activeRoom={activeRoom} onRoomChange={setActiveRoom} />
+      <ChatSidebar 
+        activeRoom={activeRoom} 
+        onRoomChange={setActiveRoom} 
+        friends={friends}
+        friendRequests={friendRequests}
+      />
       <main className="main-content">
-        <ChatArea roomId={activeRoom} currentUser={user} />
+        <ChatArea 
+          roomId={activeRoom} 
+          currentUser={user} 
+          friends={friends}
+        />
         <MessageInput roomId={activeRoom} currentUser={user} />
       </main>
     </div>
