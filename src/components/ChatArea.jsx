@@ -50,6 +50,11 @@ export default function ChatArea({ roomId, currentUser }) {
     setAutoScroll(scrollHeight - scrollTop - clientHeight < 100);
   };
   
+  const { updateUser } = import("@/lib/auth-context").then(m => m.useAuth) ? require("@/lib/auth-context").useAuth() : { updateUser: ()=>{} }; // safe dynamic import fallback, wait, actually we can just pass updateUser from page.jsx
+
+  // It's better to just pass updateUser via props or cleanly grab it.
+  const auth = require("@/lib/auth-context").useAuth();
+
   const handleProfileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -58,7 +63,7 @@ export default function ChatArea({ roomId, currentUser }) {
       const { uploadFile, updateUserProfile } = await import("@/lib/firebase");
       const url = await uploadFile("profiles", file);
       await updateUserProfile(currentUser.email, url);
-      if (currentUser) currentUser.photoURL = url;
+      auth.updateUser({ photoURL: url });
       alert("Profile picture updated!");
     } catch (err) {
       alert("Failed to upload profile picture.");
@@ -67,6 +72,19 @@ export default function ChatArea({ roomId, currentUser }) {
       setUploadingProfile(false);
     }
   };
+
+  useEffect(() => {
+    if (currentUser && !currentUser.uid) {
+       // Autoload missing UID onto current session without forcing a logout
+       import("firebase/firestore").then(async ({ getDoc, doc }) => {
+          const { db } = await import("@/lib/firebase");
+          const d = await getDoc(doc(db, "users", currentUser.email));
+          if (d.exists() && d.data().uid) {
+             auth.updateUser({ uid: d.data().uid, photoURL: d.data().photoURL });
+          }
+       }).catch(()=>{});
+    }
+  }, [currentUser?.email]);
 
   return (
     <div className="chat-area">

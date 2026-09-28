@@ -75,8 +75,21 @@ export function AuthProvider({ children }) {
     setLocked(false);
   }, []);
 
+  const updateUser = useCallback((newData) => {
+    setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+      const session = { ...prevUser, ...newData };
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      } catch {
+        try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
+      }
+      return session;
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, locked, login, unlock, logout }}>
+    <AuthContext.Provider value={{ user, loading, locked, login, unlock, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
