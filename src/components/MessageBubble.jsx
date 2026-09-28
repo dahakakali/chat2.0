@@ -118,8 +118,7 @@ export default function MessageBubble({ message, showAvatar, currentUser }) {
 
       <div className="message__body">
         <div
-          className={`message__bubble ${isOwn ? "message__bubble--own" : ""
-            } ${isAI ? "message__bubble--ai" : ""}`}
+          className={`message__bubble ${isOwn ? "message__bubble--own" : ""} ${isAI ? "message__bubble--ai" : ""}`}
         >
           {message.text && (
             <p className="message__text">

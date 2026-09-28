@@ -1,7 +1,7 @@
 "use client";
 
-import { ROOMS, subscribeToPresence } from "@/lib/firebase";
-import { useState, useEffect } from "react";
+import { ROOMS, subscribeToPresence, subscribeToUnreadCount } from "@/lib/firebase";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
 
@@ -9,6 +9,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
   const { user, logout } = useAuth();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadCounts, setUnreadCounts] = useState({});
 
   useEffect(() => {
     let unsub;
@@ -16,10 +17,51 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
     return () => { if (unsub) unsub(); };
   }, []);
 
+  // Track unread messages
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const stored = localStorage.getItem(`lastRead_${user.email}`);
+      const lastReadTimestamps = stored ? JSON.parse(stored) : {};
+      
+      const unsubs = [];
+      const trackRoom = (roomId) => {
+        const lastRead = lastReadTimestamps[roomId] || Date.now();
+        unsubs.push(subscribeToUnreadCount(roomId, lastRead, (count) => {
+          setUnreadCounts(prev => ({ ...prev, [roomId]: count }));
+        }));
+      };
+
+      ROOMS.forEach(r => trackRoom(r.id));
+      onlineUsers.forEach(u => {
+        if (u.email === user.email) return;
+        const sorted = [user.email, u.email].sort();
+        trackRoom(`dm_${sorted[0]}_${sorted[1]}`);
+      });
+
+      return () => unsubs.forEach(u => u());
+    } catch (err) {
+      console.error(err);
+    }
+  }, [user, onlineUsers]);
+
+  // Mark room as read when visited
+  useEffect(() => {
+    if (activeRoom && user) {
+      try {
+        const stored = localStorage.getItem(`lastRead_${user.email}`);
+        const lastReadTimestamps = stored ? JSON.parse(stored) : {};
+        lastReadTimestamps[activeRoom] = Date.now();
+        localStorage.setItem(`lastRead_${user.email}`, JSON.stringify(lastReadTimestamps));
+        setUnreadCounts(prev => ({ ...prev, [activeRoom]: 0 }));
+      } catch {}
+    }
+  }, [activeRoom, user]);
+
   const handleRoomClick = (roomId) => { onRoomChange(roomId); setMobileOpen(false); };
   
   const handleUserClick = (targetUser) => {
-    if (targetUser.email === user?.email) return; // Don't DM yourself
+    if (targetUser.email === user?.email) return;
     const sortedEmails = [user.email, targetUser.email].sort();
     const dmRoomId = `dm_${sortedEmails[0]}_${sortedEmails[1]}`;
     onRoomChange(dmRoomId);
@@ -42,7 +84,15 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
               <li key={room.id}>
                 <button className={`room-item ${activeRoom === room.id ? "room-item--active" : ""}`} onClick={() => handleRoomClick(room.id)}>
                   <span className="room-icon">{room.icon}</span>
-                  <div className="room-info"><span className="room-name">{room.name}</span><span className="room-desc">{room.description}</span></div>
+                  <div className="room-info" style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+                    <div style={{ flex: 1, textAlign: 'left' }}>
+                      <span className="room-name">{room.name}</span>
+                      <span className="room-desc">{room.description}</span>
+                    </div>
+                    {unreadCounts[room.id] > 0 && activeRoom !== room.id && (
+                      <span style={{background: '#ff4d4d', color: '#fff', borderRadius: '12px', padding: '2px 8px', fontSize: '11px', fontWeight: 'bold'}}>{unreadCounts[room.id]}</span>
+                    )}
+                  </div>
                 </button>
               </li>
             ))}
@@ -51,21 +101,29 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
         <div className="sidebar__section">
           <h3 className="sidebar__section-title">Online — {onlineUsers.length}</h3>
           <ul className="user-list">
-            {onlineUsers.map((u) => (
-              <li key={u.id} className="user-item">
-                <button 
-                  className={`room-item ${activeRoom.includes(u.email) ? "room-item--active" : ""}`} 
-                  onClick={() => handleUserClick(u)} 
-                  style={{background: 'transparent', padding: '5px 10px', margin: 0, width: '100%', justifyContent: 'flex-start'}}
-                >
-                  <div className="user-avatar-wrapper" style={{marginRight: 10}}>
-                    <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12}}>{u.name?.charAt(0)}</div>
-                    <span className="online-dot"></span>
-                  </div>
-                  <span className="user-name">{u.name} {u.email === user?.email ? "(You)" : ""}</span>
-                </button>
-              </li>
-            ))}
+            {onlineUsers.map((u) => {
+              const sorted = user ? [user.email, u.email].sort() : [];
+              const dmRoomId = user ? `dm_${sorted[0]}_${sorted[1]}` : "";
+              const unread = unreadCounts[dmRoomId] || 0;
+              return (
+                <li key={u.id} className="user-item">
+                  <button 
+                    className={`room-item ${activeRoom?.includes(u.email) ? "room-item--active" : ""}`} 
+                    onClick={() => handleUserClick(u)} 
+                    style={{background: 'transparent', padding: '5px 10px', margin: 0, width: '100%', display: 'flex', alignItems: 'center'}}
+                  >
+                    <div className="user-avatar-wrapper" style={{marginRight: 10}}>
+                      <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12, lineHeight:'24px'}}>{u.name?.charAt(0)}</div>
+                      <span className="online-dot"></span>
+                    </div>
+                    <span className="user-name" style={{flex: 1, textAlign: 'left'}}>{u.name} {u.email === user?.email ? "(You)" : ""}</span>
+                    {unread > 0 && !activeRoom?.includes(u.email) && (
+                      <span style={{background: '#ff4d4d', color: '#fff', borderRadius: '12px', padding: '2px 8px', fontSize: '11px', fontWeight: 'bold'}}>{unread}</span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
         {user && (

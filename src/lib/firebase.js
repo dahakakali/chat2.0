@@ -182,6 +182,17 @@ export function subscribeToMessages(roomId, callback, messageLimit = 500) {
   });
 }
 
+export function subscribeToUnreadCount(roomId, lastReadTime, callback) {
+  if (!lastReadTime) return callback(0);
+  const messagesRef = collection(db, "rooms", roomId, "messages");
+  const q = query(messagesRef, where("createdAt", ">", new Date(lastReadTime)));
+  return onSnapshot(q, (snapshot) => {
+    if (!snapshot.metadata.hasPendingWrites) {
+      callback(snapshot.size);
+    }
+  });
+}
+
 // ===================== FILE UPLOAD =====================
 
 export async function uploadFile(roomId, file) {
