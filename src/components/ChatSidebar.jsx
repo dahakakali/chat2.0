@@ -68,10 +68,28 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
     setMobileOpen(false);
   };
 
+  const totalUnread = Object.values(unreadCounts).reduce((a, b) => a + b, 0);
+
   return (
     <>
-      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar">
+      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar" style={{position: 'relative'}}>
         <span className="toggle-icon">{mobileOpen ? "✕" : "☰"}</span>
+        {!mobileOpen && totalUnread > 0 && (
+          <span style={{
+            position: 'absolute',
+            top: 2,
+            right: 2,
+            background: '#ff4d4d',
+            color: 'white',
+            borderRadius: '10px',
+            padding: '2px 6px',
+            fontSize: '10px',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          }}>
+            {totalUnread > 99 ? '99+' : totalUnread}
+          </span>
+        )}
       </button>
       <aside className={`sidebar ${mobileOpen ? "sidebar--open" : ""}`}>
         <div className="sidebar__header">
