@@ -139,7 +139,11 @@ export default function ChatSidebar({ activeRoom, onRoomChange }) {
                     style={{background: 'transparent', padding: '5px 10px', margin: 0, width: '100%', display: 'flex', alignItems: 'center'}}
                   >
                     <div className="user-avatar-wrapper" style={{marginRight: 10}}>
-                      <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12, lineHeight:'24px'}}>{u.name?.charAt(0)}</div>
+                      {u.photoURL ? (
+                        <img src={u.photoURL} alt="avatar" style={{width: 24, height: 24, borderRadius: '50%', objectFit: 'cover'}} />
+                      ) : (
+                        <div className="user-avatar-placeholder" style={{width:24, height:24, fontSize:12, lineHeight:'24px'}}>{u.name?.charAt(0)}</div>
+                      )}
                       <span className="online-dot"></span>
                     </div>
                     <span className="user-name" style={{flex: 1, textAlign: 'left'}}>{u.name} {u.email === user?.email ? "(You)" : ""}</span>

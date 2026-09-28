@@ -161,6 +161,7 @@ export async function sendMessage(
     text: text || "",
     userName: user.name,
     userEmail: user.email,
+    userPhoto: user.photoURL || null,
     createdAt: serverTimestamp(),
     isAI: false,
     fileUrl: fileUrl || null,
@@ -250,10 +251,12 @@ export function getFileType(file) {
 // ===================== PRESENCE =====================
 
 export async function setUserOnline(user) {
+  if (!user?.email) return;
   const presenceRef = doc(db, "presence", user.email);
   await setDoc(presenceRef, {
     name: user.name,
     email: user.email,
+    photoURL: user.photoURL || null,
     lastSeen: serverTimestamp(),
     online: true,
   });

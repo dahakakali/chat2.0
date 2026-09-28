@@ -96,6 +96,8 @@ export default function MessageBubble({ message, showAvatar, currentUser }) {
           <div className="message__avatar">
             {isAI ? (
               <div className="ai-avatar">🤖</div>
+            ) : message.userPhoto ? (
+              <img src={message.userPhoto} alt="avatar" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%'}} />
             ) : (
               <div className="message__avatar-placeholder">
                 {message.userName?.charAt(0)}
