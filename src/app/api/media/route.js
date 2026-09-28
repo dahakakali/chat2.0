@@ -11,7 +11,7 @@ export async function GET(request) {
     }
 
     if (!url.startsWith('http')) {
-       url = `https://hbj2sufsillhpkkr.public.blob.vercel-storage.com/${url.replace(/^\/+/, '')}`;
+      url = `https://hbj2sufsillhpkkr.public.blob.vercel-storage.com/${url.replace(/^\/+/, '')}`;
     }
 
     // Must use '@vercel/blob' get() with full URL because these blobs are 'access: private'
