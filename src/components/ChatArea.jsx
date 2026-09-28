@@ -15,14 +15,42 @@ export default function ChatArea({ roomId, currentUser }) {
   
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
+  const [dmUser, setDmUser] = useState(null);
   const fileInputRef = useRef(null);
   
   let room = ROOMS.find((r) => r.id === roomId);
   if (!room && roomId.startsWith("dm_")) {
     const emails = roomId.replace("dm_", "").split("_");
     const otherEmail = emails.find(e => e !== currentUser?.email) || "Someone";
-    room = { id: roomId, name: otherEmail.split("@")[0], icon: "👤", description: "Direct Message" };
+    room = { 
+      id: roomId, 
+      name: dmUser?.name || otherEmail.split("@")[0], 
+      icon: dmUser?.photoURL ? (
+        <img src={dmUser.photoURL} alt="profile" style={{width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', display: 'block'}} />
+      ) : (
+        <div style={{width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent)', color: '#fff', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>{(dmUser?.name || otherEmail).charAt(0)}</div>
+      ), 
+      description: "Direct Message" 
+    };
   }
+
+  useEffect(() => {
+    if (roomId.startsWith("dm_")) {
+      const emails = roomId.replace("dm_", "").split("_");
+      const otherEmail = emails.find(e => e !== currentUser?.email);
+      if (otherEmail) {
+         import("firebase/firestore").then(async ({ getDoc, doc }) => {
+            const { db } = await import("@/lib/firebase");
+            const d = await getDoc(doc(db, "users", otherEmail));
+            if (d.exists()) {
+               setDmUser(d.data());
+            }
+         }).catch(()=>{});
+      }
+    } else {
+      setDmUser(null);
+    }
+  }, [roomId, currentUser?.email]);
 
   useEffect(() => {
     setLoading(true); setMessages([]); msgCountRef.current = 0;
