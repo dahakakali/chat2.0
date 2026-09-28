@@ -56,9 +56,9 @@ export default function ChatArea({ roomId, currentUser }) {
     setUploadingProfile(true);
     try {
       const { uploadFile, updateUserProfile } = await import("@/lib/firebase");
-      const result = await uploadFile("profiles", file);
-      await updateUserProfile(currentUser.email, result.fileUrl);
-      if (currentUser) currentUser.photoURL = result.fileUrl;
+      const url = await uploadFile("profiles", file);
+      await updateUserProfile(currentUser.email, url);
+      if (currentUser) currentUser.photoURL = url;
       alert("Profile picture updated!");
     } catch (err) {
       alert("Failed to upload profile picture.");
