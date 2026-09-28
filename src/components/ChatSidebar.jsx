@@ -104,7 +104,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
 
   return (
     <>
-      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar" style={{position: 'relative'}}>
+      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle sidebar">
         <span className="toggle-icon">{mobileOpen ? "✕" : "☰"}</span>
         {!mobileOpen && (totalUnread + friendRequests.length) > 0 && (
           <span className="sidebar-toggle-badge">
