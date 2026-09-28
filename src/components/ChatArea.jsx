@@ -76,13 +76,20 @@ export default function ChatArea({ roomId, currentUser }) {
   useEffect(() => {
     if (currentUser && !currentUser.uid) {
        // Autoload missing UID onto current session without forcing a logout
-       import("firebase/firestore").then(async ({ getDoc, doc }) => {
+       import("firebase/firestore").then(async ({ getDoc, doc, setDoc }) => {
           const { db } = await import("@/lib/firebase");
-          const d = await getDoc(doc(db, "users", currentUser.email));
-          if (d.exists() && d.data().uid) {
-             auth.updateUser({ uid: d.data().uid, photoURL: d.data().photoURL });
+          const userRef = doc(db, "users", currentUser.email);
+          const d = await getDoc(userRef);
+          if (d.exists()) {
+             let curUid = d.data().uid;
+             if (!curUid) {
+                 const hex = Math.floor(Math.random() * 1048576).toString(16).padStart(5, '0');
+                 curUid = `${d.data().name.replace(/\s+/g, '')}@${hex}`;
+                 await setDoc(userRef, { uid: curUid }, { merge: true });
+             }
+             auth.updateUser({ uid: curUid, photoURL: d.data().photoURL });
           }
-       }).catch(()=>{});
+       }).catch((err)=>{ console.error("UID generation failed", err) });
     }
   }, [currentUser?.email]);
 
