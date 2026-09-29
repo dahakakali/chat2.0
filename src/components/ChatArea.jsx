@@ -148,21 +148,21 @@ export default function ChatArea({ roomId, currentUser, friends = [], onReply })
       </div>
       
       {profileModalOpen && (
-        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div style={{background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', width: '320px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)'}}>
-            <h2 style={{marginTop: 0, marginBottom: '24px'}}>Your Profile</h2>
-            <div style={{width: 90, height: 90, borderRadius: '50%', background: 'var(--accent)', color: '#fff', fontSize: '36px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', overflow: 'hidden'}}>
-               {currentUser?.photoURL ? <img src={currentUser.photoURL} alt="profile" style={{width: '100%', height: '100%', objectFit: 'cover'}} /> : currentUser?.name?.charAt(0)}
+        <div className="profile-modal-overlay" onClick={() => setProfileModalOpen(false)}>
+          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="profile-modal__title">Your Profile</h2>
+            <div className="profile-modal__avatar">
+               {currentUser?.photoURL ? <img src={currentUser.photoURL} alt="profile" /> : currentUser?.name?.charAt(0)}
             </div>
             
-            <h3 style={{margin: '0 0 4px 0', fontSize: '18px'}}>{currentUser?.name}</h3>
-            <p style={{color: 'var(--primary)', margin: '0 0 20px 0', fontSize: '13px', fontWeight: 'bold', letterSpacing: '1px'}}>UID: {currentUser?.uid || "Generating..."}</p>
+            <h3 className="profile-modal__name">{currentUser?.name}</h3>
+            <p className="profile-modal__uid">UID: {currentUser?.uid || "Generating..."}</p>
             
             <input type="file" accept="image/*" ref={fileInputRef} style={{display: 'none'}} onChange={handleProfileUpload} />
-            <button className="btn btn--primary" style={{width: '100%', marginBottom: '12px'}} onClick={() => fileInputRef.current?.click()} disabled={uploadingProfile}>
+            <button className="btn btn--primary profile-modal__btn" onClick={() => fileInputRef.current?.click()} disabled={uploadingProfile}>
                 {uploadingProfile ? "Uploading..." : "Change Picture"}
             </button>
-            <button className="btn btn--ghost" style={{width: '100%'}} onClick={() => setProfileModalOpen(false)}>Done</button>
+            <button className="btn btn--ghost profile-modal__btn" onClick={() => setProfileModalOpen(false)}>Done</button>
           </div>
         </div>
       )}

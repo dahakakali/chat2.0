@@ -12,10 +12,12 @@ export default function StickerPicker({ onSelect, onClose }) {
   const searchRef = useRef(null);
   const debounceTimer = useRef(null);
 
-  // Close on outside click
+  // Close on outside click — use setTimeout so sticker onMouseDown fires first
   useEffect(() => {
     const handle = (e) => {
       if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+        // Don't close if clicking the sticker toggle button
+        if (e.target.closest && e.target.closest('.sticker-btn')) return;
         onClose();
       }
     };
@@ -128,7 +130,7 @@ export default function StickerPicker({ onSelect, onClose }) {
                 src={s.preview}
                 alt="sticker"
                 className="sp__sticker"
-                onClick={() => onSelect(s.url)}
+                onMouseDown={(e) => { e.preventDefault(); onSelect(s.url); }}
                 loading="lazy"
               />
             ))}

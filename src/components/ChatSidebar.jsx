@@ -151,7 +151,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
                       <span className="room-desc">{room.description}</span>
                     </div>
                     {unreadCounts[room.id] > 0 && activeRoom !== room.id && (
-                      <span style={{background: '#ff4d4d', color: '#fff', borderRadius: '12px', padding: '2px 8px', fontSize: '11px', fontWeight: 'bold'}}>{unreadCounts[room.id]}</span>
+                      <span className="unread-badge">{unreadCounts[room.id]}</span>
                     )}
                   </div>
                 </button>
@@ -184,7 +184,7 @@ export default function ChatSidebar({ activeRoom, onRoomChange, friends = [], fr
                     </div>
                     <span className="user-name" style={{flex: 1, textAlign: 'left'}}>{u.name} {u.email === user?.email ? "(You)" : ""}</span>
                     {unread > 0 && !activeRoom?.includes(u.email) && (
-                      <span style={{background: '#ff4d4d', color: '#fff', borderRadius: '12px', padding: '2px 8px', fontSize: '11px', fontWeight: 'bold'}}>{unread}</span>
+                      <span className="unread-badge">{unread}</span>
                     )}
                   </button>
                 </li>

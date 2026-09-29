@@ -70,31 +70,16 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
   const handleKeyDown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
   return (
-    <div className="message-input" style={{ flexDirection: 'column' }}>
+    <div className="message-input">
       {replyTo && (
-        <div className="reply-preview" style={{ 
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-          padding: '8px 12px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px 12px 0 0', 
-          borderLeft: '4px solid #00a884', marginBottom: '-4px', zIndex: 1, position: 'relative' 
-        }}>
-          <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '13px', color: '#00a884', fontWeight: 'bold' }}>{replyTo.userName}</span>
-            <span style={{ 
-                fontSize: '13px', 
-                color: 'var(--text-light)', 
-                display: '-webkit-box',
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-                lineHeight: '1.3'
-              }}>
+        <div className="reply-preview">
+          <div className="reply-preview__info">
+            <span className="reply-preview__name">{replyTo.userName}</span>
+            <span className="reply-preview__text">
               {replyTo.text || (replyTo.fileType ? `[${replyTo.fileType}]` : "Attachment")}
             </span>
           </div>
-          <button onClick={onClearReply} style={{ background: 'transparent', border: 'none', color: 'var(--text-light)', cursor: 'pointer', padding: '4px' }}>
+          <button className="reply-preview__close" onClick={onClearReply} aria-label="Cancel reply">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
           </button>
         </div>
