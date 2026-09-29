@@ -98,6 +98,17 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
 
     const t = message.fileType;
 
+    if (t === "sticker") {
+      return (
+        <img
+          src={message.fileUrl}
+          alt="sticker"
+          className="msg-media--sticker"
+          loading="lazy"
+        />
+      );
+    }
+
     if (t === "image") {
       return (
         <img
@@ -219,7 +230,9 @@ export default function MessageBubble({ message, showAvatar, currentUser, friend
 
       <div className="message__body">
         <div
-          className={`message__bubble ${isOwn ? "message__bubble--own" : ""} ${isAI ? "message__bubble--ai" : ""}`}
+          className={message.fileType === "sticker" && !message.text && !message.replyTo 
+            ? "message__sticker-container" 
+            : `message__bubble ${isOwn ? "message__bubble--own" : ""} ${isAI ? "message__bubble--ai" : ""}`}
         >
           {message.replyTo && (
             <div 
