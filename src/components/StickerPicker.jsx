@@ -12,17 +12,23 @@ export default function StickerPicker({ onSelect, onClose }) {
   const searchRef = useRef(null);
   const debounceTimer = useRef(null);
 
-  // Close on outside click — use setTimeout so sticker onMouseDown fires first
+  // Close on outside click/touch — use pointerdown for cross-device support
   useEffect(() => {
     const handle = (e) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target)) {
-        // Don't close if clicking the sticker toggle button
-        if (e.target.closest && e.target.closest('.sticker-btn')) return;
-        onClose();
-      }
+      // If touch/click is inside the picker, do nothing
+      if (pickerRef.current && pickerRef.current.contains(e.target)) return;
+      // Don't close if tapping the sticker toggle button
+      if (e.target.closest && e.target.closest('.sticker-btn')) return;
+      onClose();
     };
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
+    // Use a small delay so the picker is fully mounted before listening
+    const timer = setTimeout(() => {
+      document.addEventListener("pointerdown", handle, true);
+    }, 100);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("pointerdown", handle, true);
+    };
   }, [onClose]);
 
   // Fetch stickers
@@ -73,8 +79,24 @@ export default function StickerPicker({ onSelect, onClose }) {
     }
   };
 
+  // Handle sticker tap/click — works on both mobile and desktop
+  const handleStickerTap = (stickerUrl) => {
+    onSelect(stickerUrl);
+  };
+
+  // Stop all events inside picker from propagating to the outside-click handler
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div ref={pickerRef} className="sp">
+    <div
+      ref={pickerRef}
+      className="sp"
+      onPointerDown={stopPropagation}
+      onTouchStart={stopPropagation}
+      onClick={stopPropagation}
+    >
       {/* Header with tabs */}
       <div className="sp__tabs">
         <button
@@ -101,7 +123,6 @@ export default function StickerPicker({ onSelect, onClose }) {
             placeholder="Search stickers…"
             value={query}
             onChange={handleSearchChange}
-            autoFocus
           />
         </div>
       )}
@@ -130,8 +151,10 @@ export default function StickerPicker({ onSelect, onClose }) {
                 src={s.preview}
                 alt="sticker"
                 className="sp__sticker"
-                onMouseDown={(e) => { e.preventDefault(); onSelect(s.url); }}
+                onClick={() => handleStickerTap(s.url)}
+                onTouchEnd={(e) => { e.preventDefault(); handleStickerTap(s.url); }}
                 loading="lazy"
+                draggable={false}
               />
             ))}
           </div>

@@ -1433,18 +1433,20 @@ img {
   position: absolute;
   bottom: calc(100% + 14px);
   left: 0;
-  width: 340px;
-  background: rgba(17, 24, 39, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  right: 0;
+  max-width: 360px;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(108, 99, 255, 0.08);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(108, 99, 255, 0.08);
   z-index: 200;
   animation: sp-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Tabs */
@@ -1457,8 +1459,8 @@ img {
 
 .sp__tab {
   flex: 1;
-  padding: 10px 0;
-  font-size: 13px;
+  padding: 12px 0;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-muted);
   background: transparent;
@@ -1466,6 +1468,7 @@ img {
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition: all var(--transition);
+  touch-action: manipulation;
 }
 
 .sp__tab:hover {
@@ -1479,21 +1482,22 @@ img {
 
 /* Search */
 .sp__search-wrapper {
-  padding: 8px 10px 4px;
+  padding: 10px 10px 6px;
   flex-shrink: 0;
 }
 
 .sp__search {
   width: 100%;
-  padding: 8px 12px;
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 14px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   color: var(--text-primary);
   outline: none;
   transition: border-color var(--transition), box-shadow var(--transition);
   font-family: var(--font-family);
+  touch-action: manipulation;
 }
 
 .sp__search::placeholder {
@@ -1508,9 +1512,10 @@ img {
 /* Body */
 .sp__body {
   padding: 8px;
-  max-height: 240px;
+  max-height: 260px;
   overflow-y: auto;
   flex: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sp__body::-webkit-scrollbar {
@@ -1536,17 +1541,19 @@ img {
   cursor: pointer;
   border-radius: var(--radius-sm);
   padding: 4px;
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(108, 99, 255, 0.2);
 }
 
 .sp__sticker:hover {
-  transform: scale(1.12);
-  background: rgba(108, 99, 255, 0.1);
-  box-shadow: 0 0 12px var(--accent-glow);
+  transform: scale(1.08);
+  background: rgba(108, 99, 255, 0.12);
 }
 
 .sp__sticker:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  background: rgba(108, 99, 255, 0.2);
 }
 
 /* Skeleton loader */
@@ -1580,6 +1587,42 @@ img {
 .sp__attribution img {
   height: 14px;
   width: auto;
+}
+
+/* Mobile responsive sticker picker */
+@media (max-width: 480px) {
+  .sp {
+    position: fixed;
+    bottom: 70px;
+    left: 8px;
+    right: 8px;
+    max-width: none;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 -8px 48px rgba(0, 0, 0, 0.7);
+  }
+
+  .sp__body {
+    max-height: 45vh;
+  }
+
+  .sp__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .sp__sticker {
+    padding: 6px;
+  }
+
+  .sp__tab {
+    padding: 14px 0;
+    font-size: 15px;
+  }
+
+  .sp__search {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
 }
 
 /* Sticker toggle button */
