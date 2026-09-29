@@ -1,18 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { sendMessage, sendAIMessage, uploadFile, getFileType } from "@/lib/firebase";
-
-const STICKERS = [
-  "https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif",
-  "https://media.giphy.com/media/3o7TKSjRrfIPq5RoEU/giphy.gif",
-  "https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif",
-  "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif",
-  "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
-  "https://media.giphy.com/media/Cmr1OMJ2FN0B2/giphy.gif",
-  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzBkaWcwZTlwMHMxcWtqYzUyNmtzYXkxdHRxeWxoeThzOG9vdGNxayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GeimqsH0TLDt4tScGw/giphy.gif",
-  "https://media.giphy.com/media/YhZkZlG744yI/giphy.gif"
-];
+import StickerPicker from "./StickerPicker";
 
 export default function MessageInput({ roomId, currentUser, replyTo, onClearReply }) {
   const [text, setText] = useState("");
@@ -21,17 +11,6 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
   const [showStickers, setShowStickers] = useState(false);
   const inputRef = useRef(null);
   const fileRef = useRef(null);
-  const pickerRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-        setShowStickers(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleSend = async () => {
     const trimmed = text.trim();
@@ -119,26 +98,16 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
       )}
       <div className="message-input__wrapper" style={{ borderRadius: replyTo ? '0 0 24px 24px' : '24px', position: 'relative' }}>
         
-        {/* Sticker Picker Popover */}
+        {/* Sticker Picker */}
         {showStickers && (
-          <div ref={pickerRef} className="sticker-picker">
-            <div className="sticker-picker__header">Stickers</div>
-            <div className="sticker-picker__grid">
-              {STICKERS.map((url, i) => (
-                <img 
-                  key={i} 
-                  src={url} 
-                  alt={`sticker ${i}`} 
-                  onClick={() => handleStickerSelect(url)}
-                  loading="lazy"
-                />
-              ))}
-            </div>
-          </div>
+          <StickerPicker
+            onSelect={handleStickerSelect}
+            onClose={() => setShowStickers(false)}
+          />
         )}
 
-        <button className="sticker-btn" onClick={() => setShowStickers(!showStickers)} disabled={uploading || sending} title="Send a sticker" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '20px', padding: '0 10px', color: 'var(--text-light)' }}>
-          😀
+        <button className="sticker-btn" onClick={() => setShowStickers(!showStickers)} disabled={uploading || sending} title="Send a sticker">
+          {showStickers ? "✕" : "😀"}
         </button>
         <button className="attach-btn" onClick={() => fileRef.current?.click()} disabled={uploading} title="Attach file">
           {uploading ? <span className="send-spinner"></span> : "📎"}

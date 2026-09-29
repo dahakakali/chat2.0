@@ -1267,65 +1267,198 @@ img {
   cursor: pointer;
 }
 
-/* ============ STICKERS ============ */
-.sticker-picker {
+/* ============ STICKERS — Premium Picker ============ */
+@keyframes sp-slide-up {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes sp-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sp {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 14px);
   left: 0;
-  width: 280px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 12px;
-  box-shadow: var(--shadow-lg);
-  z-index: 100;
+  width: 340px;
+  background: rgba(17, 24, 39, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(108, 99, 255, 0.08);
+  z-index: 200;
+  animation: sp-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.sticker-picker__header {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  padding-bottom: 8px;
+/* Tabs */
+.sp__tabs {
+  display: flex;
   border-bottom: 1px solid var(--border-color);
+  padding: 0 4px;
+  flex-shrink: 0;
 }
 
-.sticker-picker__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  max-height: 200px;
+.sp__tab {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sp__tab:hover {
+  color: var(--text-secondary);
+}
+
+.sp__tab--active {
+  color: var(--accent-secondary);
+  border-bottom-color: var(--accent-primary);
+}
+
+/* Search */
+.sp__search-wrapper {
+  padding: 8px 10px 4px;
+  flex-shrink: 0;
+}
+
+.sp__search {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: var(--font-family);
+}
+
+.sp__search::placeholder {
+  color: var(--text-muted);
+}
+
+.sp__search:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+/* Body */
+.sp__body {
+  padding: 8px;
+  max-height: 240px;
   overflow-y: auto;
+  flex: 1;
 }
 
-.sticker-picker__grid::-webkit-scrollbar {
+.sp__body::-webkit-scrollbar {
   width: 4px;
 }
-.sticker-picker__grid::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+
+.sp__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 4px;
 }
 
-.sticker-picker__grid img {
+/* Grid */
+.sp__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.sp__sticker {
   width: 100%;
   aspect-ratio: 1;
   object-fit: contain;
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: transform 0.2s ease, background 0.2s ease;
   padding: 4px;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sticker-picker__grid img:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.1);
+.sp__sticker:hover {
+  transform: scale(1.12);
+  background: rgba(108, 99, 255, 0.1);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
+.sp__sticker:active {
+  transform: scale(0.95);
+}
+
+/* Skeleton loader */
+.sp__skeleton {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: sp-shimmer 1.4s ease infinite;
+}
+
+/* Empty state */
+.sp__empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* GIPHY attribution */
+.sp__attribution {
+  padding: 6px 10px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.sp__attribution img {
+  height: 14px;
+  width: auto;
+}
+
+/* Sticker toggle button */
+.sticker-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.sticker-btn:hover {
+  color: var(--accent-secondary);
+  background: rgba(108, 99, 255, 0.1);
+}
+
+/* Sticker in message bubble */
 .msg-media--sticker {
-  max-width: 140px;
-  max-height: 140px;
+  max-width: 150px;
+  max-height: 150px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
   user-select: none;
 }
 
@@ -1336,5 +1469,12 @@ img {
   border: none;
   border-radius: 0;
   box-shadow: none;
-  transition: opacity var(--transition);
+}
+
+/* Mobile: make picker full width */
+@media (max-width: 480px) {
+  .sp {
+    width: calc(100vw - 32px);
+    left: -8px;
+  }
 }
