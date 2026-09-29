@@ -60,7 +60,10 @@ export default function MessageInput({ roomId, currentUser, replyTo, onClearRepl
       const replyData = replyTo ? { id: replyTo.id, userName: replyTo.userName, text: replyTo.text, fileType: replyTo.fileType } : null;
       await sendMessage(roomId, currentUser, "", stickerUrl, "sticker", "sticker.gif", replyData);
       if (onClearReply) onClearReply();
-    } catch (e) { console.error("Sticker send failed:", e); }
+    } catch (e) { 
+      console.error("Sticker send failed:", e); 
+      alert("Failed to send sticker: " + e.message);
+    }
     finally { setSending(false); }
   };
 
