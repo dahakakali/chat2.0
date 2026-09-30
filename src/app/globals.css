@@ -1429,6 +1429,16 @@ img {
   100% { background-position: 200% 0; }
 }
 
+/* Backdrop — blocks touch/click behind sticker picker */
+.sp-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  background: transparent;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .sp {
   position: absolute;
   bottom: calc(100% + 14px);

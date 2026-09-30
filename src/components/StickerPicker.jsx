@@ -18,24 +18,12 @@ export default function StickerPicker({ onSelect, onClose }) {
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  // Close on outside click/touch
-  useEffect(() => {
-    const handle = (e) => {
-      // If touch/click is inside the picker, do nothing
-      if (pickerRef.current && pickerRef.current.contains(e.target)) return;
-      // Don't close if tapping the sticker toggle button
-      if (e.target.closest && e.target.closest('.sticker-btn')) return;
-      onCloseRef.current();
-    };
-    // Use a small delay so the picker is fully mounted before listening
-    const timer = setTimeout(() => {
-      document.addEventListener("pointerdown", handle);
-    }, 150);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("pointerdown", handle);
-    };
-  }, []); // stable — never re-runs
+  // Close handler for the backdrop
+  const handleBackdropClose = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onCloseRef.current();
+  }, []);
 
   // Fetch stickers
   const fetchStickers = useCallback(async (searchQuery) => {
@@ -96,85 +84,95 @@ export default function StickerPicker({ onSelect, onClose }) {
   };
 
   return (
-    <div
-      ref={pickerRef}
-      className="sp"
-      onPointerDown={stopPropagation}
-      onTouchStart={stopPropagation}
-      onClick={stopPropagation}
-    >
-      {/* Header with tabs */}
-      <div className="sp__tabs">
-        <button
-          className={`sp__tab ${tab === "trending" ? "sp__tab--active" : ""}`}
-          onClick={() => setTab("trending")}
-        >
-          🔥 Trending
-        </button>
-        <button
-          className={`sp__tab ${tab === "search" ? "sp__tab--active" : ""}`}
-          onClick={() => setTab("search")}
-        >
-          🔍 Search
-        </button>
-      </div>
+    <>
+      {/* Backdrop — captures all touch/click outside the picker */}
+      <div
+        className="sp-backdrop"
+        onPointerDown={handleBackdropClose}
+        onTouchStart={handleBackdropClose}
+        onClick={handleBackdropClose}
+      />
 
-      {/* Search input */}
-      {tab === "search" && (
-        <div className="sp__search-wrapper">
-          <input
-            ref={searchRef}
-            className="sp__search"
-            type="text"
-            placeholder="Search stickers…"
-            value={query}
-            onChange={handleSearchChange}
-          />
+      <div
+        ref={pickerRef}
+        className="sp"
+        onPointerDown={stopPropagation}
+        onTouchStart={stopPropagation}
+        onClick={stopPropagation}
+      >
+        {/* Header with tabs */}
+        <div className="sp__tabs">
+          <button
+            className={`sp__tab ${tab === "trending" ? "sp__tab--active" : ""}`}
+            onClick={() => setTab("trending")}
+          >
+            🔥 Trending
+          </button>
+          <button
+            className={`sp__tab ${tab === "search" ? "sp__tab--active" : ""}`}
+            onClick={() => setTab("search")}
+          >
+            🔍 Search
+          </button>
         </div>
-      )}
 
-      {/* Sticker grid */}
-      <div className="sp__body">
-        {loading ? (
-          <div className="sp__grid">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="sp__skeleton" />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="sp__empty">{error}</div>
-        ) : stickers.length === 0 ? (
-          <div className="sp__empty">
-            {tab === "search" && !query.trim()
-              ? "Type to search stickers"
-              : "No stickers found"}
-          </div>
-        ) : (
-          <div className="sp__grid">
-            {stickers.map((s) => (
-              <img
-                key={s.id}
-                src={s.preview}
-                alt="sticker"
-                className="sp__sticker"
-                onClick={() => handleStickerTap(s.url)}
-                onTouchEnd={(e) => { e.preventDefault(); handleStickerTap(s.url); }}
-                loading="lazy"
-                draggable={false}
-              />
-            ))}
+        {/* Search input */}
+        {tab === "search" && (
+          <div className="sp__search-wrapper">
+            <input
+              ref={searchRef}
+              className="sp__search"
+              type="text"
+              placeholder="Search stickers…"
+              value={query}
+              onChange={handleSearchChange}
+            />
           </div>
         )}
-      </div>
 
-      {/* GIPHY attribution */}
-      <div className="sp__attribution">
-        <img
-          src="https://giphy.com/static/img/poweredby_giphy.png"
-          alt="Powered by GIPHY"
-          height="14"
-        />
+        {/* Sticker grid */}
+        <div className="sp__body">
+          {loading ? (
+            <div className="sp__grid">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="sp__skeleton" />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="sp__empty">{error}</div>
+          ) : stickers.length === 0 ? (
+            <div className="sp__empty">
+              {tab === "search" && !query.trim()
+                ? "Type to search stickers"
+                : "No stickers found"}
+            </div>
+          ) : (
+            <div className="sp__grid">
+              {stickers.map((s) => (
+                <img
+                  key={s.id}
+                  src={s.preview}
+                  alt="sticker"
+                  className="sp__sticker"
+                  onClick={() => handleStickerTap(s.url)}
+                  onTouchEnd={(e) => { e.preventDefault(); handleStickerTap(s.url); }}
+                  loading="lazy"
+                  draggable={false}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* GIPHY attribution */}
+        <div className="sp__attribution">
+          <img
+            src="https://giphy.com/static/img/poweredby_giphy.png"
+            alt="Powered by GIPHY"
+            height="14"
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
