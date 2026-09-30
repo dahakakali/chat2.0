@@ -11,25 +11,31 @@ export default function StickerPicker({ onSelect, onClose }) {
   const pickerRef = useRef(null);
   const searchRef = useRef(null);
   const debounceTimer = useRef(null);
+  const onCloseRef = useRef(onClose);
 
-  // Close on outside click/touch — use pointerdown for cross-device support
+  // Keep the ref in sync so the effect always calls the latest onClose
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // Close on outside click/touch
   useEffect(() => {
     const handle = (e) => {
       // If touch/click is inside the picker, do nothing
       if (pickerRef.current && pickerRef.current.contains(e.target)) return;
       // Don't close if tapping the sticker toggle button
       if (e.target.closest && e.target.closest('.sticker-btn')) return;
-      onClose();
+      onCloseRef.current();
     };
     // Use a small delay so the picker is fully mounted before listening
     const timer = setTimeout(() => {
-      document.addEventListener("pointerdown", handle, true);
-    }, 100);
+      document.addEventListener("pointerdown", handle);
+    }, 150);
     return () => {
       clearTimeout(timer);
-      document.removeEventListener("pointerdown", handle, true);
+      document.removeEventListener("pointerdown", handle);
     };
-  }, [onClose]);
+  }, []); // stable — never re-runs
 
   // Fetch stickers
   const fetchStickers = useCallback(async (searchQuery) => {
