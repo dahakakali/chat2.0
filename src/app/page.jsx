@@ -103,27 +103,26 @@ export default function Home() {
   }
 
   return (
-    <div className="app-layout">
-      <ChatSidebar 
-        activeRoom={activeRoom} 
-        onRoomChange={(room) => { setActiveRoom(room); setReplyTo(null); }} 
-        friends={friends}
-        friendRequests={friendRequests}
-      />
-      <main className="main-content">
-        <ChatArea 
-          roomId={activeRoom} 
-          currentUser={user} 
-          friends={friends}
-          onReply={setReplyTo}
-        />
-        <MessageInput 
-          roomId={activeRoom} 
-          currentUser={user} 
-          replyTo={replyTo}
-          onClearReply={() => setReplyTo(null)}
-        />
-      </main>
+    <div className="blocked-screen">
+      <div className="blocked-screen__bg">
+        <div className="blocked-screen__orb blocked-screen__orb--1" />
+        <div className="blocked-screen__orb blocked-screen__orb--2" />
+        <div className="blocked-screen__orb blocked-screen__orb--3" />
+      </div>
+      <div className="blocked-screen__card">
+        <div className="blocked-screen__quote-mark">&ldquo;</div>
+        <p className="blocked-screen__poem">
+          You always let your brain speak louder than your heart.<br />
+          No wonder your decisions are so cold—<br />
+          I just wish you had remembered<br />
+          that feelings I have too.
+        </p>
+        <div className="blocked-screen__quote-mark blocked-screen__quote-mark--close">&rdquo;</div>
+        <div className="blocked-screen__divider" />
+        <button className="btn btn--ghost blocked-screen__logout" onClick={logout}>
+          Sign out
+        </button>
+      </div>
     </div>
   );
 }
