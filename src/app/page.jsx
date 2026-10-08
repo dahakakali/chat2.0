@@ -113,9 +113,9 @@ export default function Home() {
         <div className="blocked-screen__quote-mark">&ldquo;</div>
         <p className="blocked-screen__poem">
           You always let your brain speak louder than your heart.<br />
-          No wonder your decisions are so cold—<br />
+          No wonder your decisions feel so cold—<br />
           I just wish you had remembered<br />
-          that feelings I have too.
+          that the feelings I have matter too.
         </p>
         <div className="blocked-screen__quote-mark blocked-screen__quote-mark--close">&rdquo;</div>
         <div className="blocked-screen__divider" />
